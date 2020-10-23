@@ -1,0 +1,35 @@
+{
+  "name": "security-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "mongoose": "^4.12.4",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth2": "^0.1.6",
+    "passport-jwt": "^3.0.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js",
+    "debug": "node --nolazy --debug-brk=5858 index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsilber/security-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gsilber/security-server/issues"
+  },
+  "homepage": "https://github.com/gsilber/security-server#readme"
+}
