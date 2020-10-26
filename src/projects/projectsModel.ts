@@ -14,7 +14,7 @@ export class ProjectsModel{
         p.description=object.description;
         p.groupid=object.groupId;
         p.groupMembers=object.groupMembers;
-        p.semester=object.semester
+        p.semester=object.semester;
         p.projectNumber=object.projectNumber;
         return p;
     }

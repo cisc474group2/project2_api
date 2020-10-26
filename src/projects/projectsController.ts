@@ -7,7 +7,6 @@ import { Config } from '../config';
 export class ProjectsController {
     static db: Database = new Database(Config.url, "projects");
     static projectsTable = 'projects';
-
     //getProjects
     //sends a json object with all projects in the system that match :year
     getProjects(req: express.Request, res: express.Response) {
