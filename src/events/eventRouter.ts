@@ -1,6 +1,6 @@
 import { AppRouter } from "../common/AppRouter";
 import { SecurityMiddleware } from "../security/securityMiddleware";
-import { EventsController } from "./eventsController";
+import { EventsController } from "./eventController";
 
 //Router for events portion of the api
 export class EventRouter extends AppRouter{

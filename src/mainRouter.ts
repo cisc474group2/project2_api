@@ -1,6 +1,8 @@
 import express from 'express'
 import { AppRouter } from './common/AppRouter';
 import { SecurityRouter } from './security/securityrouter';
+import { EventRouter } from './events/eventRouter';
+import { UserRouter } from './user/userRouter';
 
 //root router for the API
 
