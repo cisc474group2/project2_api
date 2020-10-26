@@ -1,0 +1,40 @@
+Events
+POST, GET: /api/events
+    GET: Will return all events
+    POST: Will create a new event
+GET, PUT, DELETE: /api/event/#event_id
+    GET: Will return details around the specific event_id
+    PUT: Will allow for updating event information
+    DELETE: Will delete the event with event id given
+GET: /api/events/#event_id/registered_ind
+    Will return list of all users registered for the event
+POSTPUT: /api/events/#event_id/#user_id
+    Will add the user to the list of registered users for the specified event
+Event Geolocation
+GET: /api/events/geoloc/#curr_location
+    Will return all event in the default (pre-defined) range
+GET: /api/events/geoloc/#curr_location/#radius
+    Will return all events in the specified range
+GET: /api/events/zip/#curr_zip
+    Will return all events within a ZIP code
+Authentication & Users
+POST: /api/auth
+    Authentication endpoint for user login
+PUT: /api/auth/recovery
+    Will send a new temp password and email it to the user
+POST TO API/USERPOST: /api/user/create
+    Will create a new user
+Separate out for ind and business
+PUT, DELETE: /api/user/#user_id
+    PUT: Will allow for updating user information
+    DELETE: Will delete the user with user id given
+GET: /api/user/ind
+    Will return list of all individuals
+GET: /api/user/ind/#ind_name
+    Will return a specific user
+GET: /api/user/bus
+    Will return all registered businesses
+GET: /api/user/bus/#bus_name
+    Will return specific business
+GET: /api/user/bus/#bus_name/hosted_events
+    Will return all events hosted by a specific business
