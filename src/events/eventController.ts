@@ -1,5 +1,5 @@
 import express, { RequestHandler } from 'express';
-import { EventsModel } from './eventsModel';
+import { EventsModel } from './eventModel';
 import { Database } from '../common/MongoDB';
 import { Config } from '../config';
 
