@@ -5,12 +5,12 @@ import { Config } from '../config';
 
 export class EventsController {
     static db: Database = new Database(Config.url, "events");
-    static eventsTable = 'events';
+    static eventsTable = 'EVENT';
     //getEvents
     //fix this
     getEvents(req: express.Request, res: express.Response) {
         const event_id = req.params.event_id;
-        EventsController.db.getRecords(EventsController.eventsTable, { event_id : event_id })
+        EventsController.db.getRecords(EventsController.eventsTable, {})
             .then((results) => res.send({ fn: 'getEvents', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 

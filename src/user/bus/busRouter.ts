@@ -10,8 +10,8 @@ export class BusRouter extends AppRouter{
 
     //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
     setupRoutes(): void {      
-        this.expressRouter.post('bus/',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getAllBusinesses);
-        this.expressRouter.put('bus/:id',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getBusiness);
-        this.expressRouter.delete('bus/:id/hosted_events',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getHostedEvents);
+        this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getAllBusinesses);
+        this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getBusiness);
+        this.expressRouter.delete('/:id/hosted_events',[SecurityMiddleware.RequireAuth],BusRouter.BusController.getHostedEvents);
     }    
 }

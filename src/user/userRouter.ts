@@ -14,8 +14,8 @@ export class UserRouter extends AppRouter{
         this.addRouter('/bus', new BusRouter());
         //this.addRouter('/ind', new IndRouter());
 
-        this.expressRouter.post('user/',[SecurityMiddleware.RequireAuth],UserRouter.userController.createUser);
-        this.expressRouter.put('user/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.updateUser);
-        this.expressRouter.delete('user/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.deleteUser);
+        this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],UserRouter.userController.createUser);
+        this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.updateUser);
+        this.expressRouter.delete('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.deleteUser);
     }    
 }
