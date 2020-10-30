@@ -12,7 +12,15 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/out/app.js"
+            "linux": {
+                "program": "${workspaceFolder}/out/app.js",
+              },
+              "osx": {
+                "program": "${workspaceFolder}/out/app.js",
+              },
+              "windows": {
+                "program": "${workspaceFolder}\\out\\app.js",
+              }
         }
     ]
 }
