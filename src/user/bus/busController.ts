@@ -5,7 +5,7 @@ import { Config } from '../../config';
 //This is just an example of a second controller attached to the security module
 
 export class BusController {
-    static db: Database = new Database(Config.url, "USER");
+    static db: Database = new Database(Config.url, "DEV");
     static userTable = 'USER';
     static businessKey = 'B';
 
@@ -13,7 +13,7 @@ export class BusController {
     //sends a json object with all projects in the system that match :year
     getAllBusinesses(req: express.Request, res: express.Response) {
         BusController.db.getRecords(BusController.userTable, { type: BusController.businessKey })
-            .then((results) => res.send({ fn: 'getProjects', status: 'success', data: results }).end())
+            .then((results) => res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 
     }
@@ -22,7 +22,7 @@ export class BusController {
     getBusiness(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
         BusController.db.getOneRecord(BusController.userTable, { _id: id, type:BusController.businessKey})
-            .then((results) => res.send({ fn: 'getProject', status: 'success', data: results }).end())
+            .then((results) => res.send({ fn: 'getBusiness', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
     //getHostedEvents
@@ -30,7 +30,7 @@ export class BusController {
     getHostedEvents(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
         BusController.db.getOneRecord(BusController.userTable, { _id: id, type:BusController.businessKey})
-            .then((results) => res.send({ fn: 'getProject', status: 'success', data: results.hostedEvents }).end())
+            .then((results) => res.send({ fn: 'getHostedEvents', status: 'success', data: results.hostedEvents }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
 }

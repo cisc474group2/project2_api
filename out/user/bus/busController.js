@@ -11,7 +11,7 @@ var BusController = /** @class */ (function () {
     //sends a json object with all projects in the system that match :year
     BusController.prototype.getAllBusinesses = function (req, res) {
         BusController.db.getRecords(BusController.userTable, { type: BusController.businessKey })
-            .then(function (results) { return res.send({ fn: 'getProjects', status: 'success', data: results }).end(); })
+            .then(function (results) { return res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //getProject
@@ -19,7 +19,7 @@ var BusController = /** @class */ (function () {
     BusController.prototype.getBusiness = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         BusController.db.getOneRecord(BusController.userTable, { _id: id, type: BusController.businessKey })
-            .then(function (results) { return res.send({ fn: 'getProject', status: 'success', data: results }).end(); })
+            .then(function (results) { return res.send({ fn: 'getBusiness', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //getHostedEvents
@@ -27,10 +27,10 @@ var BusController = /** @class */ (function () {
     BusController.prototype.getHostedEvents = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         BusController.db.getOneRecord(BusController.userTable, { _id: id, type: BusController.businessKey })
-            .then(function (results) { return res.send({ fn: 'getProject', status: 'success', data: results.hostedEvents }).end(); })
+            .then(function (results) { return res.send({ fn: 'getHostedEvents', status: 'success', data: results.hostedEvents }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
-    BusController.db = new MongoDB_1.Database(config_1.Config.url, "USER");
+    BusController.db = new MongoDB_1.Database(config_1.Config.url, "DEV");
     BusController.userTable = 'USER';
     BusController.businessKey = 'B';
     return BusController;

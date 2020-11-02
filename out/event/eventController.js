@@ -50,7 +50,7 @@ var EventsController = /** @class */ (function () {
             .then(function (results) { return results ? (res.send({ fn: 'deleteEvent', status: 'success' })) : (res.send({ fn: 'deleteEvent', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
-    EventsController.db = new MongoDB_1.Database(config_1.Config.url, "events");
+    EventsController.db = new MongoDB_1.Database(config_1.Config.url, "DEV");
     EventsController.eventsTable = 'EVENT';
     return EventsController;
 }());
