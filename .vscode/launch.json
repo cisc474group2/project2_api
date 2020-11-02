@@ -5,11 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "type": "node",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
+            "name": "Launch Program",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "linux": {
+                "program": "${workspaceFolder}/out/app.js",
+              },
+              "osx": {
+                "program": "${workspaceFolder}/out/app.js",
+              },
+              "windows": {
+                "program": "${workspaceFolder}\\out\\app.js",
+              }
         }
     ]
 }

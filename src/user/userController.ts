@@ -6,7 +6,7 @@ import { Config } from '../config';
 
 export class UserController {
     static db: Database = new Database(Config.url, "users");
-    static userTable = 'users';
+    static userTable = 'USER';
    
     //createUser
     //adds the user to the database
