@@ -10,7 +10,11 @@ var BusController = /** @class */ (function () {
     //getProjects
     //sends a json object with all projects in the system that match :year
     BusController.prototype.getAllBusinesses = function (req, res) {
+<<<<<<< HEAD
         BusController.db.getRecords(BusController.userTable, {})
+=======
+        BusController.db.getRecords(BusController.userTable, { TYPE: BusController.businessKey })
+>>>>>>> 5592d54216293c20de8c6a6556bbc6779e7ab25f
             .then(function (results) { return res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
@@ -18,7 +22,7 @@ var BusController = /** @class */ (function () {
     //sends the specific project as JSON with id=:id
     BusController.prototype.getBusiness = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
-        BusController.db.getOneRecord(BusController.userTable, { _id: id, type: BusController.businessKey })
+        BusController.db.getOneRecord(BusController.userTable, { _id: id, TYPE: BusController.businessKey })
             .then(function (results) { return res.send({ fn: 'getBusiness', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
@@ -32,7 +36,7 @@ var BusController = /** @class */ (function () {
     };
     BusController.db = new MongoDB_1.Database(config_1.Config.url, "DEV");
     BusController.userTable = 'USER';
-    BusController.businessKey = 'B';
+    BusController.businessKey = "B";
     return BusController;
 }());
 exports.BusController = BusController;
