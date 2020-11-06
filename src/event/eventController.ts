@@ -4,7 +4,7 @@ import { Database } from '../common/MongoDB';
 import { Config } from '../config';
 
 export class EventsController {
-    static db: Database = new Database(Config.url, "DEV");
+    static db: Database = new Database(Config.url_elevated, "DEV");
     static eventsTable = 'EVENT';
     //getEvents
     //fix this

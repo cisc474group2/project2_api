@@ -18,7 +18,7 @@ var AppRouter_1 = require("../common/AppRouter");
 var securityMiddleware_1 = require("../security/securityMiddleware");
 var userController_1 = require("./userController");
 var busRouter_1 = require("./bus/busRouter");
-//import { IndRouter } from './bus/indRouter';
+var indRouter_1 = require("./ind/indRouter");
 //This is just an example second router to show how additional routers can be added
 var UserRouter = /** @class */ (function (_super) {
     __extends(UserRouter, _super);
@@ -28,7 +28,7 @@ var UserRouter = /** @class */ (function (_super) {
     //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
     UserRouter.prototype.setupRoutes = function () {
         this.addRouter('/bus', new busRouter_1.BusRouter());
-        //this.addRouter('/ind', new IndRouter());
+        this.addRouter('/ind', new indRouter_1.IndRouter());
         this.expressRouter.post('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.createUser);
         this.expressRouter.put('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.updateUser);
         this.expressRouter.delete('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.deleteUser);

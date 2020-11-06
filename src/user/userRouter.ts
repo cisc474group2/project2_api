@@ -2,7 +2,7 @@ import { AppRouter } from "../common/AppRouter";
 import { SecurityMiddleware } from "../security/securityMiddleware";
 import { UserController } from "./userController";
 import { BusRouter } from './bus/busRouter';
-//import { IndRouter } from './bus/indRouter';
+import { IndRouter } from './ind/indRouter';
 
 //This is just an example second router to show how additional routers can be added
 export class UserRouter extends AppRouter{
@@ -12,7 +12,7 @@ export class UserRouter extends AppRouter{
     //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
     setupRoutes(): void {      
         this.addRouter('/bus', new BusRouter());
-        //this.addRouter('/ind', new IndRouter());
+        this.addRouter('/ind', new IndRouter());
 
         this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],UserRouter.userController.createUser);
         this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.updateUser);
