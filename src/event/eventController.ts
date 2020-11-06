@@ -9,7 +9,6 @@ export class EventsController {
     //getEvents
     //fix this
     getEvents(req: express.Request, res: express.Response) {
-        const event_id = req.params.event_id;
         EventsController.db.getRecords(EventsController.eventsTable, {})
             .then((results) => res.send({ fn: 'getEvents', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
@@ -18,9 +17,8 @@ export class EventsController {
     //getEventByID
     //sends the specific project as JSON with id=:id
     getEventByID(req: express.Request, res: express.Response) {
-        //const semester = req.params.semester;
-        const event_id = Database.stringToId(req.params.event_id);
-        EventsController.db.getOneRecord(EventsController.eventsTable, { event_id: event_id })
+        const id = Database.stringToId(req.params.id);        
+        EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then((results) => res.send({ fn: 'getEvent', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
@@ -33,7 +31,6 @@ export class EventsController {
             .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
-
     //updateEvent
     //updates the event in the database with id :id
     updateEvent(req: express.Request, res: express.Response) {

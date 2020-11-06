@@ -15,7 +15,6 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventRouter = void 0;
 var AppRouter_1 = require("../common/AppRouter");
-var securityMiddleware_1 = require("../security/securityMiddleware");
 var eventController_1 = require("./eventController");
 //Router for events portion of the api
 var EventRouter = /** @class */ (function (_super) {
@@ -27,9 +26,9 @@ var EventRouter = /** @class */ (function (_super) {
     EventRouter.prototype.setupRoutes = function () {
         this.expressRouter.get('/', EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id', EventRouter.eventController.getEventByID);
-        this.expressRouter.post('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], EventRouter.eventController.createEvent);
-        this.expressRouter.put('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], EventRouter.eventController.updateEvent);
-        this.expressRouter.delete('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], EventRouter.eventController.deleteEvent);
+        this.expressRouter.post('/', EventRouter.eventController.createEvent);
+        this.expressRouter.put('/:id', EventRouter.eventController.updateEvent);
+        this.expressRouter.delete('/:id', EventRouter.eventController.deleteEvent);
     };
     EventRouter.eventController = new eventController_1.EventsController();
     return EventRouter;
