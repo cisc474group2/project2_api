@@ -7,7 +7,6 @@ export class EventsController {
     static db: Database = new Database(Config.url_elevated, "DEV");
     static eventsTable = 'EVENT';
     //getEvents
-    //fix this
     getEvents(req: express.Request, res: express.Response) {
         EventsController.db.getRecords(EventsController.eventsTable, {})
             .then((results) => res.send({ fn: 'getEvents', status: 'success', data: results }).end())
@@ -20,6 +19,18 @@ export class EventsController {
         const id = Database.stringToId(req.params.id);        
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then((results) => res.send({ fn: 'getEvent', status: 'success', data: results }).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
+    //getRegisteredInd
+    //returns the list of registered attendees for the given event
+    getRegisteredInd(req: express.Request, res: express.Response) {
+        const id = Database.stringToId(req.params.id);
+        EventsController.db.getRecords(EventsController.eventsTable, { _id: id })
+            .then(results => {
+                //extracts just the registered individuals list
+                let event_attendees = results.map((x: any) => x.registered_ind);
+                res.send({ fn: 'getRegisteredInd', status: 'success', data: { registered_ind: event_attendees } })
+            })
             .catch((reason) => res.status(500).send(reason).end());
     }
     //createEvent
@@ -41,6 +52,25 @@ export class EventsController {
             .then((results) => results ? (res.send({ fn: 'updateEvent', status: 'success' })) : (res.send({ fn: 'updateEvent', status: 'failure', data: 'Not found' })).end())
             .catch(err => res.send({ fn: 'updateEvent', status: 'failure', data: err }).end());
 
+    }
+    //updateAttendees
+    //adds user to end of attendees list
+    updateAttendees(req: express.Request, res: express.Response) {
+        const id = Database.stringToId(req.params.id);
+        const data = req.body;
+        delete data.authUser;
+        var registered_ind = '';
+        EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
+            .then(results => {
+                //extracts just the registered individuals list
+                registered_ind = results.map((x: any) => x.registered_ind);
+                res.send({ fn: 'getRegisteredInd', status: 'success', data: { registered_ind: registered_ind } })
+            })
+            .catch((reason) => res.status(500).send(reason).end());
+        var new_list = registered_ind + data;
+        EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: new_list })
+            .then((results) => results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end())
+            .catch(err => res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end());
     }
     //deleteEvent
     //deletes the event in the database with id :id

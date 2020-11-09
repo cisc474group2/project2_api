@@ -34,7 +34,7 @@ var UserController = /** @class */ (function () {
             .then(function (results) { return results ? (res.send({ fn: 'deleteUser', status: 'success' })) : (res.send({ fn: 'deleteUser', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
-    UserController.db = new MongoDB_1.Database(config_1.Config.url, "users");
+    UserController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "users");
     UserController.userTable = 'USER';
     return UserController;
 }());

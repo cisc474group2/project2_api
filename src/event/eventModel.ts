@@ -1,5 +1,4 @@
 export class EventsModel{
-    event_id='';
     title='';
     bus_id='';
     description?='';
@@ -11,7 +10,6 @@ export class EventsModel{
 
     static fromObject(object:any):EventsModel{
         const e:EventsModel=new EventsModel();
-        e.event_id=object.event_id;
         e.title=object.title;
         e.bus_id=object.bus_id;
         e.description=object.description;
@@ -23,6 +21,6 @@ export class EventsModel{
         return e;
     }
     toObject():any{
-        return {event_id:this.event_id,title:this.title,bus_id:this.bus_id,description:this.description,registered_ind:this.registered_ind,event_geoloc:this.event_geoloc,event_address:this.event_address,start_time:this.start_time,end_time:this.end_time};
+        return {title:this.title,bus_id:this.bus_id,description:this.description,registered_ind:this.registered_ind,event_geoloc:this.event_geoloc,event_address:this.event_address,start_time:this.start_time,end_time:this.end_time};
     }
 }

@@ -14,5 +14,7 @@ export class EventRouter extends AppRouter{
         this.expressRouter.post('/',EventRouter.eventController.createEvent);
         this.expressRouter.put('/:id',EventRouter.eventController.updateEvent);
         this.expressRouter.delete('/:id',EventRouter.eventController.deleteEvent);
+        this.expressRouter.get('/:id/registered',EventRouter.eventController.getRegisteredInd);
+        this.expressRouter.put('/:id/registered',EventRouter.eventController.updateAttendees);
     }    
 }
