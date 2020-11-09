@@ -6,17 +6,9 @@ GET, PUT, DELETE: /api/event/#event_id
     GET: Will return details around the specific event_id
     PUT: Will allow for updating event information
     DELETE: Will delete the event with event id given
-<<<<<<< HEAD
 GET, PUT: /api/events/#event_id/registered
     GET: Will return list of all users registered for the event
     PUT: Will add the user to the list of registered users for the specified event
-=======
-GET: /api/events/#event_id/registered_ind
-    Will return list of all users registered for the event
-POSTPUT: /api/events/#event_id/#user_id
-    Will add the user to the list of registered users for the specified event
-
->>>>>>> 003312e97a64149e7f3cfa06aae5a76ef5c99211
 Event Geolocation
 GET: /api/events/geoloc/#curr_location
     Will return all event in the default (pre-defined) range
