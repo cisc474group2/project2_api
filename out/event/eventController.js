@@ -10,7 +10,6 @@ var EventsController = /** @class */ (function () {
     //getEvents
     //fix this
     EventsController.prototype.getEvents = function (req, res) {
-        var event_id = req.params.event_id;
         EventsController.db.getRecords(EventsController.eventsTable, {})
             .then(function (results) { return res.send({ fn: 'getEvents', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
@@ -18,9 +17,8 @@ var EventsController = /** @class */ (function () {
     //getEventByID
     //sends the specific project as JSON with id=:id
     EventsController.prototype.getEventByID = function (req, res) {
-        //const semester = req.params.semester;
-        var event_id = MongoDB_1.Database.stringToId(req.params.event_id);
-        EventsController.db.getOneRecord(EventsController.eventsTable, { event_id: event_id })
+        var id = MongoDB_1.Database.stringToId(req.params.id);
+        EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then(function (results) { return res.send({ fn: 'getEvent', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
