@@ -5,7 +5,7 @@ import { Config } from '../config';
 //This is just an example of a second controller attached to the security module
 
 export class UserController {
-    static db: Database = new Database(Config.url_elevated, "users");
+    static db: Database = new Database(Config.url_elevated, "DEV");
     static userTable = 'USER';
    
     //createUser

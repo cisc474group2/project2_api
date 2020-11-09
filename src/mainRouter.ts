@@ -1,6 +1,6 @@
 import express from 'express'
 import { AppRouter } from './common/AppRouter';
-import { SecurityRouter } from './security/securityrouter';
+import { SecurityRouter } from './security/securityRouter';
 import { EventRouter } from './event/eventRouter';
 import { UserRouter } from './user/userRouter';
 
