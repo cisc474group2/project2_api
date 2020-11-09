@@ -10,6 +10,7 @@ GET: /api/events/#event_id/registered_ind
     Will return list of all users registered for the event
 POSTPUT: /api/events/#event_id/#user_id
     Will add the user to the list of registered users for the specified event
+
 Event Geolocation
 GET: /api/events/geoloc/#curr_location
     Will return all event in the default (pre-defined) range
@@ -17,6 +18,7 @@ GET: /api/events/geoloc/#curr_location/#radius
     Will return all events in the specified range
 GET: /api/events/zip/#curr_zip
     Will return all events within a ZIP code
+
 Authentication & Users
 POST: /api/auth
     Authentication endpoint for user login
@@ -24,6 +26,7 @@ PUT: /api/auth/recovery
     Will send a new temp password and email it to the user
 POST TO API/USERPOST: /api/user/create
     Will create a new user
+
 Separate out for ind and business
 PUT, DELETE: /api/user/#user_id
     PUT: Will allow for updating user information

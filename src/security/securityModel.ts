@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt';
 
 //represents a user in the system
-export class UserModel{
+export class SecModel{
     id?='';
     email = '';
     private _password='';
 
     //when user password is set through here, it is stored encrypted
     set password(val:string){
-        this._password=UserModel.encryptString(val);
+        this._password=SecModel.encryptString(val);
     }
     //returns encrypted password
     get password():string{return this._password;}
@@ -20,8 +20,8 @@ export class UserModel{
     }
 
     //does not encrypt password, expects already encrypted password
-    static fromObject=(obj:any):UserModel=>{
-        const mdl=new UserModel(obj.email,'');
+    static fromObject=(obj:any):SecModel=>{
+        const mdl=new SecModel(obj.email,'');
         mdl._password=obj.password;
         return mdl;
     }
