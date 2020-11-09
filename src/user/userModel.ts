@@ -6,20 +6,26 @@ export class UserModel{
     private _password='';
     private _password_reset='';
     type='';
-    type_obj='';
+    type_obj=Object;
     last_login='';
     reg_events:string[]=[];
 
+    //when user password is set through here, it is stored encrypted
     set password(val:string) { 
         this._password=UserModel.encryptString(val);
     }
 
+    //returns encrypted password
     get password():string{return this._password;}
 
-    public constructor(email:string, password:st)
+    //encrypts password
+    public constructor(email:string, password:string) {
+        this.email = email;
+        this.password = password;
+    }
 
     static fromObject(object:any):UserModel{
-        const u:UserModel=new UserModel();
+        const u:UserModel=new UserModel(object.email, '');
         u.user_id=object.user_id;
         u.email=object.email;
         u._password=object.password;
@@ -39,6 +45,12 @@ export class UserModel{
             type_obj:this.type_obj,
             last_login:this.last_login,
             reg_events:this.reg_events};
+    }
+
+    //compares unencrypted password to encrypted password
+    validatePassword(password:string):boolean{
+        if (this.password==='*') {return false;}
+        return bcrypt.compareSync(password,this.password);
     }
 
     //encrypt a string using the bcrypt library

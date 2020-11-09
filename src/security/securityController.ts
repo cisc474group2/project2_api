@@ -1,13 +1,13 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { Config } from '../config';
-import { SecModel } from './securityModel';
+import { UserModel } from '../user/userModel';
 import { Database } from '../common/MongoDB';
 
 //Implementation of security endpoints
 
 export class SecurityController {
-    static db: Database = new Database(Config.url, "security");
+    static db: Database = new Database(Config.url_elevated, "user");
     static usersTable = 'USER';
 
     //login - POST
@@ -17,7 +17,7 @@ export class SecurityController {
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (!userRecord) return res.sendStatus(401).end();
-                const usr: SecModel = SecModel.fromObject(userRecord);
+                const usr: UserModel = UserModel.fromObject(userRecord);
                 if (!usr.validatePassword(req.body.password)) return res.sendStatus(401).end();
                 const token = jwt.sign(usr.toObject(), Config.secret, { expiresIn: Config.tokenLife });
                 res.send({ fn: 'login', status: 'success', data: { token: token,user: {email: req.body.email} } }).end();
@@ -28,7 +28,7 @@ export class SecurityController {
     //expects email and password fields to be set in the body of the post request
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const user: SecModel = new SecModel(req.body.email, req.body.password);
+        const user: UserModel = new UserModel(req.body.email, req.body.password);
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
@@ -50,7 +50,7 @@ export class SecurityController {
     //returns a success messager to the client on success, a failure status code on failure
     changePwd(req: express.Request, res: express.Response, next: express.NextFunction) {
         if (!req.body.password) res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
-        const user: SecModel = new SecModel(req.body.authUser.email, req.body.password);
+        const user: UserModel = new UserModel(req.body.authUser.email, req.body.password);
         SecurityController.db.updateRecord(SecurityController.usersTable, {email: user.email},{ $set: {password: user.password }}).then((result:Boolean)=>{
             if (result)
                 res.send({ fn: 'changePwd', status: 'success' }).end();
