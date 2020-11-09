@@ -7,7 +7,7 @@ import { Database } from '../common/MongoDB';
 //Implementation of security endpoints
 
 export class SecurityController {
-    static db: Database = new Database(Config.url_elevated, "user");
+    static db: Database = new Database(Config.url_elevated, "DEV");
     static usersTable = 'USER';
 
     //login - POST
@@ -29,7 +29,7 @@ export class SecurityController {
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
         const user: UserModel = new UserModel(req.body.email, req.body.password);
-        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { EMAIL: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
                 SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then((result: boolean) => res.send({ fn: 'register', status: 'success' }).end())

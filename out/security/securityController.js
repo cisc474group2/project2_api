@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SecurityController = void 0;
-var config_1 = require("../config");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var userModel_1 = require("./userModel");
+var config_1 = require("../config");
+var userModel_1 = require("../user/userModel");
 var MongoDB_1 = require("../common/MongoDB");
 //Implementation of security endpoints
 var SecurityController = /** @class */ (function () {
@@ -32,7 +32,7 @@ var SecurityController = /** @class */ (function () {
     //sends a success message to caller on success, or a failure status code on failure
     SecurityController.prototype.register = function (req, res, next) {
         var user = new userModel_1.UserModel(req.body.email, req.body.password);
-        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { EMAIL: req.body.email })
             .then(function (userRecord) {
             if (userRecord)
                 return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
@@ -63,8 +63,8 @@ var SecurityController = /** @class */ (function () {
                 res.status(400).send({ fn: 'changePwd', status: 'failure' }).end();
         }).catch(function (err) { return res.send({ fn: 'changePwd', status: 'failure', data: err }).end(); });
     };
-    SecurityController.db = new MongoDB_1.Database(config_1.Config.url, "security");
-    SecurityController.usersTable = 'users';
+    SecurityController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "DEV");
+    SecurityController.usersTable = 'USER';
     return SecurityController;
 }());
 exports.SecurityController = SecurityController;
