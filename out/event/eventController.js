@@ -47,6 +47,7 @@ var EventsController = /** @class */ (function () {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         var data = req.body;
         delete data.authUser;
+        delete data.registered_ind;
         EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: req.body })
             .then(function (results) { return results ? (res.send({ fn: 'updateEvent', status: 'success' })) : (res.send({ fn: 'updateEvent', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (err) { return res.send({ fn: 'updateEvent', status: 'failure', data: err }).end(); });
@@ -57,18 +58,22 @@ var EventsController = /** @class */ (function () {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         var data = req.body;
         delete data.authUser;
-        var registered_ind = '';
+        var registered_ind = [];
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then(function (results) {
-            //extracts just the registered individuals list
-            registered_ind = results.map(function (x) { return x.registered_ind; });
-            res.send({ fn: 'getRegisteredInd', status: 'success', data: { registered_ind: registered_ind } });
+            registered_ind = results.registered_ind;
+            if (registered_ind == null)
+                registered_ind = [];
+            if (!results.registered_ind.includes(data.registered_ind)) {
+                registered_ind.push(data.registered_ind);
+            }
+            EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: { registered_ind: registered_ind } })
+                .then(function (results) { return results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end(); })
+                .catch(function (err) { return res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end(); });
         })
-            .catch(function (reason) { return res.status(500).send(reason).end(); });
-        var new_list = registered_ind + data;
-        EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: new_list })
-            .then(function (results) { return results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end(); })
-            .catch(function (err) { return res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end(); });
+            .catch(function (reason) {
+            return res.status(500).send(reason).end();
+        });
     };
     //deleteEvent
     //deletes the event in the database with id :id

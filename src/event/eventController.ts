@@ -16,7 +16,7 @@ export class EventsController {
     //getEventByID
     //sends the specific project as JSON with id=:id
     getEventByID(req: express.Request, res: express.Response) {
-        const id = Database.stringToId(req.params.id);        
+        const id = Database.stringToId(req.params.id);
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then((results) => res.send({ fn: 'getEvent', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
@@ -48,6 +48,7 @@ export class EventsController {
         const id = Database.stringToId(req.params.id);
         const data = req.body;
         delete data.authUser;
+        delete data.registered_ind;
         EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: req.body })
             .then((results) => results ? (res.send({ fn: 'updateEvent', status: 'success' })) : (res.send({ fn: 'updateEvent', status: 'failure', data: 'Not found' })).end())
             .catch(err => res.send({ fn: 'updateEvent', status: 'failure', data: err }).end());
@@ -59,18 +60,21 @@ export class EventsController {
         const id = Database.stringToId(req.params.id);
         const data = req.body;
         delete data.authUser;
-        var registered_ind = '';
+        var registered_ind = [];
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
             .then(results => {
-                //extracts just the registered individuals list
-                registered_ind = results.map((x: any) => x.registered_ind);
-                res.send({ fn: 'getRegisteredInd', status: 'success', data: { registered_ind: registered_ind } })
+                registered_ind=results.registered_ind;
+                if (registered_ind==null) registered_ind=[];
+                if(!results.registered_ind.includes(data.registered_ind)){
+                    registered_ind.push(data.registered_ind);
+                }
+                EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: {registered_ind: registered_ind }})
+                    .then((results) => results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end())
+                    .catch(err => res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end());
             })
-            .catch((reason) => res.status(500).send(reason).end());
-        var new_list = registered_ind + data;
-        EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: new_list })
-            .then((results) => results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end())
-            .catch(err => res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end());
+            .catch((reason) => {
+                return res.status(500).send(reason).end();
+            });
     }
     //deleteEvent
     //deletes the event in the database with id :id
