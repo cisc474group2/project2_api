@@ -1,4 +1,5 @@
 export class EventsModel{
+    _id='';
     title='';
     bus_id='';
     description?='';
@@ -7,9 +8,11 @@ export class EventsModel{
     event_address='';
     start_time='';
     end_time='';
+    create_date='';
 
     static fromObject(object:any):EventsModel{
         const e:EventsModel=new EventsModel();
+        e._id = object._id;
         e.title=object.title;
         e.bus_id=object.bus_id;
         e.description=object.description;

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventsModel = void 0;
 var EventsModel = /** @class */ (function () {
     function EventsModel() {
+        this._id = '';
         this.title = '';
         this.bus_id = '';
         this.description = '';
@@ -11,9 +12,11 @@ var EventsModel = /** @class */ (function () {
         this.event_address = '';
         this.start_time = '';
         this.end_time = '';
+        this.create_date = '';
     }
     EventsModel.fromObject = function (object) {
         var e = new EventsModel();
+        e._id = object._id;
         e.title = object.title;
         e.bus_id = object.bus_id;
         e.description = object.description;

@@ -27,6 +27,8 @@ var Database = /** @class */ (function () {
                 if (err)
                     reject(err);
                 var dbo = db.db(dbname);
+                object.create_date = new Date();
+                object.update_date = object.create_date;
                 dbo.collection(collection).insertOne(object, function (err, result) {
                     if (err)
                         reject(err);
@@ -48,6 +50,7 @@ var Database = /** @class */ (function () {
                 if (err)
                     reject(err);
                 var dbo = db.db(dbname);
+                update.update_date = new Date();
                 dbo.collection(collection).updateOne(filter, update, function (err, result) {
                     if (err)
                         reject(err);
