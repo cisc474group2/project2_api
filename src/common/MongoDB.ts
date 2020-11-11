@@ -1,4 +1,4 @@
-import { MongoClient, FilterQuery, ObjectID } from 'mongodb';
+import { MongoClient, FilterQuery, ObjectID, Timestamp } from 'mongodb';
 /*Wrapper class for accessing Mongo Databse*/
 
 export class Database {
@@ -23,6 +23,8 @@ export class Database {
             MongoClient.connect(url, function (err, db) {
                 if (err) reject(err);
                 const dbo = db.db(dbname);
+                object.create_date = new Date();
+                object.update_date = object.create_date;
                 dbo.collection(collection).insertOne(object,(err, result) => {
                     if (err) reject(err);
                     db.close();
@@ -44,6 +46,7 @@ export class Database {
             MongoClient.connect(url, function (err, db) {
                 if (err) reject(err);
                 const dbo = db.db(dbname);
+                update.update_date = new Date();
                 dbo.collection(collection).updateOne(filter,update,(err, result) => {
                     if (err) reject(err);
                     db.close();

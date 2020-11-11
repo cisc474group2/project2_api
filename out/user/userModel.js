@@ -8,13 +8,14 @@ var bcrypt_1 = __importDefault(require("bcrypt"));
 var UserModel = /** @class */ (function () {
     //encrypts password
     function UserModel(email, password) {
-        this.user_id = '';
+        this._id = '';
         this.email = '';
         this._password = '';
         this._password_reset = '';
         this.type = '';
         this.type_obj = Object;
-        this.last_login = '';
+        this.last_login = Object;
+        this.create_date = Object;
         this.reg_events = [];
         this.email = email;
         this.password = password;
@@ -31,7 +32,7 @@ var UserModel = /** @class */ (function () {
     });
     UserModel.fromObject = function (object) {
         var u = new UserModel(object.email, '');
-        u.user_id = object.user_id;
+        u._id = object.user_id;
         u.email = object.email;
         u._password = object.password;
         u._password_reset = object.password_reset;
@@ -42,8 +43,7 @@ var UserModel = /** @class */ (function () {
         return u;
     };
     UserModel.prototype.toObject = function () {
-        return { user_id: this.user_id,
-            email: this.email,
+        return { email: this.email,
             password: this._password,
             password_reset: this._password_reset,
             type: this.type,

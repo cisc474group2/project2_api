@@ -1,13 +1,15 @@
 import bcrypt from 'bcrypt';
+import { Timestamp } from 'mongodb';
 
 export class UserModel{
-    user_id='';
+    _id='';
     email='';
     private _password='';
     private _password_reset='';
     type='';
     type_obj=Object;
-    last_login='';
+    last_login=Object;
+    create_date=Object;
     reg_events:string[]=[];
 
     //when user password is set through here, it is stored encrypted
@@ -26,7 +28,7 @@ export class UserModel{
 
     static fromObject(object:any):UserModel{
         const u:UserModel=new UserModel(object.email, '');
-        u.user_id=object.user_id;
+        u._id=object.user_id;
         u.email=object.email;
         u._password=object.password;
         u._password_reset=object.password_reset;
@@ -37,15 +39,14 @@ export class UserModel{
         return u;
     }
     toObject():any{
-        return {user_id:this.user_id,
-            email:this.email,
+        return {email:this.email,
             password:this._password,
             password_reset:this._password_reset,
             type:this.type,
             type_obj:this.type_obj,
             last_login:this.last_login,
             reg_events:this.reg_events};
-    }
+        }
 
     //compares unencrypted password to encrypted password
     validatePassword(password:string):boolean{
