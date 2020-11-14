@@ -32,7 +32,10 @@ var SecurityController = /** @class */ (function () {
     //sends a success message to caller on success, or a failure status code on failure
     SecurityController.prototype.register = function (req, res, next) {
         var user = new userModel_1.UserModel(req.body.email, req.body.password);
-        SecurityController.db.getOneRecord(SecurityController.usersTable, { EMAIL: req.body.email })
+        var user_type = req.body.type;
+        //Add if statement here for diff types
+        user.type = user_type;
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then(function (userRecord) {
             if (userRecord)
                 return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();

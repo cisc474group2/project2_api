@@ -29,6 +29,9 @@ export class SecurityController {
     //sends a success message to caller on success, or a failure status code on failure
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
         const user: UserModel = new UserModel(req.body.email, req.body.password);
+        const user_type: string = req.body.type;
+        //Add if statement here for diff types
+        user.type = user_type;
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();

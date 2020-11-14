@@ -10,7 +10,7 @@ var IndController = /** @class */ (function () {
     //getProjects
     //sends a json object with all projects in the system that match :year
     IndController.prototype.getAllIndividuals = function (req, res) {
-        IndController.db.getRecords(IndController.userTable, { TYPE: IndController.individualKey })
+        IndController.db.getRecords(IndController.userTable, { type: IndController.individualKey })
             .then(function (results) { return res.send({ fn: 'getAllIndividuals', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
