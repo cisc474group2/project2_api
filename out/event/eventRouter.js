@@ -25,7 +25,7 @@ var EventRouter = /** @class */ (function (_super) {
     }
     //called by the framework to add the routes for the security portion of the API
     EventRouter.prototype.setupRoutes = function () {
-        this.addRouter('/geoloc', new geolocRouter_1.GeoLocRouter());
+        this.addRouter('/geo', new geolocRouter_1.GeoLocRouter());
         this.expressRouter.get('/', EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id', EventRouter.eventController.getEventByID);
         this.expressRouter.post('/', EventRouter.eventController.createEvent);

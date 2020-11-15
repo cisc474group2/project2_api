@@ -10,12 +10,14 @@ GET, PUT: /api/events/#event_id/registered
     GET: Will return list of all users registered for the event
     PUT: Will add the user to the list of registered users for the specified event
 Event Geolocation
-GET: /api/events/geoloc/#curr_location
+GET: /api/events/geo/loc/#curr_location
     Will return all event in the default (pre-defined) range
-GET: /api/events/geoloc/#curr_location/#radius
+GET: /api/events/geo/loc/#curr_location/#radius
     Will return all events in the specified range
-GET: /api/events/zip/#curr_zip
+GET: /api/events/geo/zip/#curr_zip
     Will return all events within a ZIP code
+GET: /api/events/geo/zip/#curr_zip/#radius
+    Will return all events within a ZIP code and radius
 
 Authentication & Users
 POST: /api/auth
