@@ -1,10 +1,11 @@
+import { GeoLocModel } from '../../event/geoloc/geolocModel';
 
 export class BusModel{
     busName='';
     cName='';
     cPhone='';
     cEmail='';
-    geoloc='';
+    geoloc!: GeoLocModel;
     mailAddress='';
     hostedEvents:string[]=[];
 

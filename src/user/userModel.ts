@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Timestamp } from 'mongodb';
+import { IndModel } from './ind/indModel';
+import { BusModel } from './bus/busModel';
 
 export class UserModel{
     _id='';
@@ -7,7 +9,7 @@ export class UserModel{
     private _password='';
     private _password_reset='';
     type='';
-    type_obj=Object;
+    type_obj: IndModel | BusModel | null = null;
     last_login=Object;
     create_date=Object;
     reg_events:string[]=[];

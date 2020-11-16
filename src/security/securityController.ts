@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { Config } from '../config';
 import { UserModel } from '../user/userModel';
 import { Database } from '../common/MongoDB';
+import { BusModel } from '../user/bus/busModel';
+import { IndModel } from '../user/ind/indModel';
+import { GeoLocModel } from '../event/geoloc/geolocModel';
 
 //Implementation of security endpoints
 
@@ -30,13 +33,45 @@ export class SecurityController {
     register(req: express.Request, res: express.Response, next: express.NextFunction) {
         const user: UserModel = new UserModel(req.body.email, req.body.password);
         const user_type: string = req.body.type;
+        let type_obj: IndModel | BusModel | null = null;
+
+        if (user_type == "I") {
+            type_obj = new IndModel();
+            type_obj.fName = req.body.type_obj.first_name;
+            type_obj.lName = req.body.type_obj.last_name;
+        }
+        else if (user_type == "B") {
+            type_obj = new BusModel();
+            type_obj.busName = req.body.type_obj.bus_name;
+            type_obj.cName = req.body.type_obj.contact_name;
+            type_obj.cPhone = req.body.type_obj.contact_phone;
+            type_obj.cEmail = req.body.type_obj.contact_email;
+            
+            type_obj.geoloc = new GeoLocModel();
+            type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
+            type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
+            type_obj.mailAddress = req.body.type_obj.bus_address;
+        }
+        else {
+            type_obj = null;
+        }
         //Add if statement here for diff types
         user.type = user_type;
+        user.type_obj = type_obj;
+        
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
                 if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
-                SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then((result: boolean) => res.send({ fn: 'register', status: 'success' }).end())
-                    .catch((reason) => res.sendStatus(500).end());
+                SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then((result: boolean) => {
+                    SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
+                        .then((userRecord: any) => {
+                            if (!userRecord) return res.sendStatus(401).end();
+                            const usr: UserModel = UserModel.fromObject(userRecord);
+                            if (!usr.validatePassword(req.body.password)) return res.sendStatus(401).end();
+                            const token = jwt.sign(usr.toObject(), Config.secret, { expiresIn: Config.tokenLife });
+                            res.send({ fn: 'login', status: 'success', data: { token: token,user: {email: req.body.email} } }).end()});
+                    //res.send({ fn: 'register', status: 'success' }).end();
+                }).catch((reason) => res.sendStatus(500).end());
             }).catch((reason) => res.sendStatus(500).end());
     }
     //authorize - GET
