@@ -12,7 +12,7 @@ export class BusController {
     //getProjects
     //sends a json object with all projects in the system that match :year
     getAllBusinesses(req: express.Request, res: express.Response) {
-        BusController.db.getRecords(BusController.userTable, { TYPE: BusController.businessKey })
+        BusController.db.getRecords(BusController.userTable, { type: BusController.businessKey })
             .then((results) => res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 

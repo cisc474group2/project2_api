@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventRouter = void 0;
 var AppRouter_1 = require("../common/AppRouter");
 var eventController_1 = require("./eventController");
+var geolocRouter_1 = require("./geoloc/geolocRouter");
 //Router for events portion of the api
 var EventRouter = /** @class */ (function (_super) {
     __extends(EventRouter, _super);
@@ -24,6 +25,7 @@ var EventRouter = /** @class */ (function (_super) {
     }
     //called by the framework to add the routes for the security portion of the API
     EventRouter.prototype.setupRoutes = function () {
+        this.addRouter('/geo', new geolocRouter_1.GeoLocRouter());
         this.expressRouter.get('/', EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id', EventRouter.eventController.getEventByID);
         this.expressRouter.post('/', EventRouter.eventController.createEvent);

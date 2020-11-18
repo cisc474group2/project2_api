@@ -12,7 +12,7 @@ export class IndController {
     //getProjects
     //sends a json object with all projects in the system that match :year
     getAllIndividuals(req: express.Request, res: express.Response) {
-        IndController.db.getRecords(IndController.userTable, { TYPE: IndController.individualKey })
+        IndController.db.getRecords(IndController.userTable, { type: IndController.individualKey })
             .then((results) => res.send({ fn: 'getAllIndividuals', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
 

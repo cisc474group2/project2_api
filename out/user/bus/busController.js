@@ -10,7 +10,7 @@ var BusController = /** @class */ (function () {
     //getProjects
     //sends a json object with all projects in the system that match :year
     BusController.prototype.getAllBusinesses = function (req, res) {
-        BusController.db.getRecords(BusController.userTable, { TYPE: BusController.businessKey })
+        BusController.db.getRecords(BusController.userTable, { type: BusController.businessKey })
             .then(function (results) { return res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
