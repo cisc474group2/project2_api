@@ -1,9 +1,11 @@
 import { json } from 'body-parser';
+import { textSpanContainsPosition } from 'typescript';
 import { Config } from '../../config';
+import axios from 'axios';
 
 export class GeoLocModel{
-    lng = 0.0;
-    lat = 0.0;
+    lng:number;
+    lat:number;
 
     static fromObject(object:any):GeoLocModel{
         const gl:GeoLocModel=new GeoLocModel();
@@ -11,12 +13,29 @@ export class GeoLocModel{
         gl.lat = object.lat;
         return gl;
     }
+
     toObject():any{
         return {lng:this.lng, lat:this.lat};
     }
 
+    public constructor(lng:number = 0.0, lat:number = 0.0) {
+        this.lng = lng;
+        this.lat = lat;
+    }
+
+    async testMeth(dynURL:string) {
+        try {
+            const axios = require('axios').default;
+            const response = await axios.get(dynURL);
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            console.log();
+        }
+    }
+
     static googleGeoCoding(combinedAddress:string) {
-        const gl:GeoLocModel = new GeoLocModel();
         const addressComponents = combinedAddress.split('+');
         let dynURL = Config.GOOGLE_GEOCODING
                 .replace('<<OUT>>', 'json')
@@ -24,53 +43,42 @@ export class GeoLocModel{
                             '+' + encodeURIComponent(addressComponents[2]) + 
                             '+' + encodeURIComponent(addressComponents[3]) + 
                             '+' + encodeURIComponent(addressComponents[4]))
-                .replace('<<KEY>>', Config.GOOGLE_API);
+                .replace('<<KEY>>', Config.GOOGLE_API);        
+        
 
-
-        const request = require('request');
-        request
-        .get(dynURL)
-        .on('response', function(response) {
-            console.log(response.statusCode) // 200
-            console.log(response.headers['content-type']) // 'image/png'
+        const axios = require('axios').default;
+        let lng:number = 0.0;
+        let lat:number = 0.0;
+        axios.get(dynURL).then(function (responce:any) {
+            console.log(responce);
+            lng = responce.data.results[0].geometry.location.lng;
+            lat = responce.data.results[0].geometry.location.lat;
+        }).catch(function (error:any) {
+            console.log(error);
+        }).then(function () {
+            console.log("hit correct return");
+            return new GeoLocModel(lng, lat);
         });
-
-                // request(dynURL,
-                // { json: true }, 
-                // (err:any, res:any, body:any) => { 
-                //     if (err) { 
-                //         return console.log(err); } 
-                //     console.log(body.url);
-                //     console.log(body.explanation); 
-                // }); 
-        // (async () => {
-        //     try {
-        //         const response = await fetch(dynURL);
-        //         const json = await response.json();
-        //         gl.lng = json.results[0].geometry.location.lng;
-        //         gl.lat = json.results[0].geometry.location.lat;
-        //         console.log(json);
-        //     } catch (error) {
-        //         if (error.name === 'AbortError') {
-        //             console.log('request was aborted');
-        //         }
-        //         else if (error.name === 'FetchError') {
-        //             console.log('boooo');
-        //         }
-        //     }             
-        // })();
-
-        // let JSOn = fetch(dynURL)
-        //         .then(response => response.json())
-        //         .then(json => {
-        //             gl.lng = json[0].geometry.location.lng;
-        //             gl.lat = json[0].geometry.location.lat;
-        //             console.log(json);
-        //             return json; 
-        //     }).catch(err => {
-        //         console.error('fetch failed', err);
-        // });
-
-        return gl;
+        // const https = require('https');
+        // https.get(dynURL, (res:any) => {
+        //     console.log('statusCode:', res.statusCode);
+        //     console.log('headers:', res.headers);
+            
+        //     res.on('data', (d:any) => {
+        //         process.stdout.write(d);
+        //     });
+        // }).on('error', (e:any) => {
+        //     console.error(e)
+        // })
+        // const request = require('request');
+        // request(dynURL, { json: true }, 
+        //     (err: any, res: any, body: { results:any }) => { 
+        //         if (err) { 
+        //             return console.log(err); } 
+        //         console.log(body.results[0].geometry.location);
+        //         gl.lng = body.results[0].geometry.location.lng;
+        //         gl.lat = body.results[0].geometry.location.lat;
+        //     });
+        return new GeoLocModel(lng, lat);
     }
 }

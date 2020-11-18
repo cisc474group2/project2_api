@@ -51,6 +51,7 @@ export class SecurityController {
             // type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
             // type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
             type_obj.mailAddress = req.body.type_obj.bus_address;
+            console.log("finished making entry");
         }
         else {
             type_obj = null;
