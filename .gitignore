@@ -2,3 +2,5 @@ node_modules/
 
 .gitsecret/keys/random_seed
 src/config.ts
+out/*
+out/config.js
