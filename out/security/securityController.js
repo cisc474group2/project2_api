@@ -8,6 +8,9 @@ var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var config_1 = require("../config");
 var userModel_1 = require("../user/userModel");
 var MongoDB_1 = require("../common/MongoDB");
+var busModel_1 = require("../user/bus/busModel");
+var indModel_1 = require("../user/ind/indModel");
+var geolocModel_1 = require("../event/geoloc/geolocModel");
 //Implementation of security endpoints
 var SecurityController = /** @class */ (function () {
     function SecurityController() {
@@ -33,14 +36,46 @@ var SecurityController = /** @class */ (function () {
     SecurityController.prototype.register = function (req, res, next) {
         var user = new userModel_1.UserModel(req.body.email, req.body.password);
         var user_type = req.body.type;
+        var type_obj = null;
+        if (user_type == "I") {
+            type_obj = new indModel_1.IndModel();
+            type_obj.fName = req.body.type_obj.first_name;
+            type_obj.lName = req.body.type_obj.last_name;
+        }
+        else if (user_type == "B") {
+            type_obj = new busModel_1.BusModel();
+            type_obj.busName = req.body.type_obj.bus_name;
+            type_obj.cName = req.body.type_obj.contact_name;
+            type_obj.cPhone = req.body.type_obj.contact_phone;
+            type_obj.cEmail = req.body.type_obj.contact_email;
+            type_obj.geoloc = new geolocModel_1.GeoLocModel();
+            type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
+            type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
+            type_obj.mailAddress = req.body.type_obj.bus_address;
+        }
+        else {
+            type_obj = null;
+        }
         //Add if statement here for diff types
         user.type = user_type;
+        user.type_obj = type_obj;
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then(function (userRecord) {
             if (userRecord)
                 return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
-            SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then(function (result) { return res.send({ fn: 'register', status: 'success' }).end(); })
-                .catch(function (reason) { return res.sendStatus(500).end(); });
+            SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then(function (result) {
+                SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
+                    .then(function (userRecord) {
+                    if (!userRecord)
+                        return res.sendStatus(401).end();
+                    var usr = userModel_1.UserModel.fromObject(userRecord);
+                    if (!usr.validatePassword(req.body.password))
+                        return res.sendStatus(401).end();
+                    var token = jsonwebtoken_1.default.sign(usr.toObject(), config_1.Config.secret, { expiresIn: config_1.Config.tokenLife });
+                    res.send({ fn: 'login', status: 'success', data: { token: token, user: { email: req.body.email } } }).end();
+                });
+                //res.send({ fn: 'register', status: 'success' }).end();
+            }).catch(function (reason) { return res.sendStatus(500).end(); });
         }).catch(function (reason) { return res.sendStatus(500).end(); });
     };
     //authorize - GET

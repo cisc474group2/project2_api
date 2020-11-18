@@ -90,6 +90,34 @@ var GeoLocController = /** @class */ (function () {
             });
         }); })();
     };
+    GeoLocController.prototype.getEventsCenteredOnZipCustomRadius = function (req, res) {
+        var _this = this;
+        var zip = req.params.zip.replace('"', '');
+        var fetch = require('node-fetch');
+        var rad = parseFloat(req.params.rad.replace('"', ""));
+        var getZipData = (function () { return __awaiter(_this, void 0, void 0, function () {
+            var response, json, lng_lat;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch(GeoLocController.zipLookup.replace('<<zip>>', zip))];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        json = _a.sent();
+                        lng_lat = json.records[0].geometry.coordinates;
+                        console.log(lng_lat);
+                        GeoLocController.db.getRecords(GeoLocController.eventsTable, { 'event_geoloc': { $geoWithin: { $centerSphere: [[lng_lat[1], lng_lat[0]],
+                                        rad / GeoLocController.earth_rad_mile] }
+                            }
+                        })
+                            .then(function (results) { return res.send({ fn: 'getEventsCenteredOnLngLat', status: 'success', data: results }).end(); })
+                            .catch(function (reason) { return res.status(500).send(reason).end(); });
+                        return [2 /*return*/];
+                }
+            });
+        }); })();
+    };
     GeoLocController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "DEV");
     GeoLocController.eventsTable = 'EVENT';
     GeoLocController.earth_rad_mile = 3963.2; //The radius for the earth in miles

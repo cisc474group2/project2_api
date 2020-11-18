@@ -7,7 +7,6 @@ var BusModel = /** @class */ (function () {
         this.cName = '';
         this.cPhone = '';
         this.cEmail = '';
-        this.geoloc = '';
         this.mailAddress = '';
         this.hostedEvents = [];
     }

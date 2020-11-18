@@ -27,6 +27,7 @@ var GeoLocRouter = /** @class */ (function (_super) {
         this.expressRouter.get('/loc/:lng_lat', GeoLocRouter.geolocController.getEventsCenteredOnLngLat);
         this.expressRouter.get('/loc/:lng_lat/:rad', GeoLocRouter.geolocController.getEventsCenteredOnLngLatCustomRadius);
         this.expressRouter.get('/zip/:zip', GeoLocRouter.geolocController.getEventsCenteredOnZip);
+        this.expressRouter.get('/zip/:zip/:rad', GeoLocRouter.geolocController.getEventsCenteredOnZipCustomRadius);
     };
     GeoLocRouter.geolocController = new geolocController_1.GeoLocController();
     return GeoLocRouter;
