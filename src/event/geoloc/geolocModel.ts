@@ -34,5 +34,6 @@ export class GeoLocModel{
 
         g.lat = 0;
         g.lng = 0;
+        return g;
     }
 }
