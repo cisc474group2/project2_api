@@ -18,7 +18,7 @@ var BusController = /** @class */ (function () {
     //sends the specific project as JSON with id=:id
     BusController.prototype.getBusiness = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
-        BusController.db.getOneRecord(BusController.userTable, { _id: id, TYPE: BusController.businessKey })
+        BusController.db.getOneRecord(BusController.userTable, { _id: id, type: BusController.businessKey })
             .then(function (results) { return res.send({ fn: 'getBusiness', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
