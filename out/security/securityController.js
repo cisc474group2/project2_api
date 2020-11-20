@@ -48,9 +48,9 @@ var SecurityController = /** @class */ (function () {
             type_obj.cName = req.body.type_obj.contact_name;
             type_obj.cPhone = req.body.type_obj.contact_phone;
             type_obj.cEmail = req.body.type_obj.contact_email;
-            type_obj.geoloc = new geolocModel_1.GeoLocModel();
-            type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
-            type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
+            type_obj.geoloc = geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address);
+            // type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
+            // type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
             type_obj.mailAddress = req.body.type_obj.bus_address;
         }
         else {
