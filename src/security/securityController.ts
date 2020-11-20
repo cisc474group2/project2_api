@@ -82,7 +82,7 @@ export class SecurityController {
     authorize(req: express.Request, res: express.Response, next: express.NextFunction) {
         //validate that req.authUser exists, if so, return the user's email address.
         console.log();
-        res.send({ fn: 'authorize', status: 'success', data:{email: req.body.authUser.email} }).end();
+        res.send({ fn: 'authorize', status: 'success', data:{email: req.body.authUser.email, type:req.body.authUser.type} }).end();
     }
     //changePwd - POST
     //chages the password of the user represented in the token.  Expects password in the body of the POST
