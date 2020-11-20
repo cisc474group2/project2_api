@@ -39,9 +39,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeoLocModel = void 0;
 var config_1 = require("../../config");
 var GeoLocModel = /** @class */ (function () {
-    function GeoLocModel() {
-        this.lng = 0.0;
-        this.lat = 0.0;
+    function GeoLocModel(lng, lat) {
+        if (lng === void 0) { lng = 0.0; }
+        if (lat === void 0) { lat = 0.0; }
+        this.lng = lng;
+        this.lat = lat;
     }
     GeoLocModel.fromObject = function (object) {
         var gl = new GeoLocModel();
@@ -52,35 +54,73 @@ var GeoLocModel = /** @class */ (function () {
     GeoLocModel.prototype.toObject = function () {
         return { lng: this.lng, lat: this.lat };
     };
-    GeoLocModel.googleGeoCoding = function (combinedAddress) {
-        var _this = this;
-        var g = new GeoLocModel();
-        var addressComponents = combinedAddress.split('+');
-        var getZipData = (function () { return __awaiter(_this, void 0, void 0, function () {
-            var dynURL, response;
+    GeoLocModel.prototype.testMeth = function (dynURL) {
+        return __awaiter(this, void 0, void 0, function () {
+            var axios_1, response, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        dynURL = config_1.Config.GOOGLE_GEOCODING
-                            .replace('<<OUT>>', 'json')
-                            .replace('<<ADDR>>', addressComponents[0] +
-                            '+' + addressComponents[2] +
-                            '+' + addressComponents[3] +
-                            '+' + addressComponents[4])
-                            .replace('<<KEY>>', config_1.Config.GOOGLE_API);
-                        return [4 /*yield*/, fetch(dynURL)];
+                        _a.trys.push([0, 2, 3, 4]);
+                        axios_1 = require('axios').default;
+                        return [4 /*yield*/, axios_1.get(dynURL)];
                     case 1:
                         response = _a.sent();
-                        return [4 /*yield*/, response.json()];
-                    case 2: return [2 /*return*/, _a.sent()];
+                        console.log(response);
+                        return [3 /*break*/, 4];
+                    case 2:
+                        error_1 = _a.sent();
+                        console.error(error_1);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        console.log();
+                        return [7 /*endfinally*/];
+                    case 4: return [2 /*return*/];
                 }
             });
-        }); });
-        console.log(getZipData);
-        //this.lng = longitude;
-        //this.lat = latitude;
-        g.lat = 0;
-        g.lng = 0;
+        });
+    };
+    GeoLocModel.googleGeoCoding = function (combinedAddress) {
+        var addressComponents = combinedAddress.split('+');
+        var dynURL = config_1.Config.GOOGLE_GEOCODING
+            .replace('<<OUT>>', 'json')
+            .replace('<<ADDR>>', encodeURIComponent(addressComponents[0]) +
+            '+' + encodeURIComponent(addressComponents[2]) +
+            '+' + encodeURIComponent(addressComponents[3]) +
+            '+' + encodeURIComponent(addressComponents[4]))
+            .replace('<<KEY>>', config_1.Config.GOOGLE_API);
+        var axios = require('axios').default;
+        var lng = 0.0;
+        var lat = 0.0;
+        axios.get(dynURL).then(function (responce) {
+            console.log(responce);
+            lng = responce.data.results[0].geometry.location.lng;
+            lat = responce.data.results[0].geometry.location.lat;
+        }).catch(function (error) {
+            console.log(error);
+        }).then(function () {
+            console.log("hit correct return");
+            return new GeoLocModel(lng, lat);
+        });
+        // const https = require('https');
+        // https.get(dynURL, (res:any) => {
+        //     console.log('statusCode:', res.statusCode);
+        //     console.log('headers:', res.headers);
+        //     res.on('data', (d:any) => {
+        //         process.stdout.write(d);
+        //     });
+        // }).on('error', (e:any) => {
+        //     console.error(e)
+        // })
+        // const request = require('request');
+        // request(dynURL, { json: true }, 
+        //     (err: any, res: any, body: { results:any }) => { 
+        //         if (err) { 
+        //             return console.log(err); } 
+        //         console.log(body.results[0].geometry.location);
+        //         gl.lng = body.results[0].geometry.location.lng;
+        //         gl.lat = body.results[0].geometry.location.lat;
+        //     });
+        return new GeoLocModel(lng, lat);
     };
     return GeoLocModel;
 }());
