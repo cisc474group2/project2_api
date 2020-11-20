@@ -35,50 +35,50 @@ export class GeoLocModel{
         }
     }
 
-    static googleGeoCoding(combinedAddress:string) {
-        const addressComponents = combinedAddress.split('+');
-        let dynURL = Config.GOOGLE_GEOCODING
-                .replace('<<OUT>>', 'json')
-                .replace('<<ADDR>>', encodeURIComponent(addressComponents[0]) + 
-                            '+' + encodeURIComponent(addressComponents[2]) + 
-                            '+' + encodeURIComponent(addressComponents[3]) + 
-                            '+' + encodeURIComponent(addressComponents[4]))
-                .replace('<<KEY>>', Config.GOOGLE_API);        
+    // static googleGeoCoding(combinedAddress:string) {
+    //     const addressComponents = combinedAddress.split('+');
+    //     let dynURL = Config.GOOGLE_GEOCODING
+    //             .replace('<<OUT>>', 'json')
+    //             .replace('<<ADDR>>', encodeURIComponent(addressComponents[0]) + 
+    //                         '+' + encodeURIComponent(addressComponents[2]) + 
+    //                         '+' + encodeURIComponent(addressComponents[3]) + 
+    //                         '+' + encodeURIComponent(addressComponents[4]))
+    //             .replace('<<KEY>>', Config.GOOGLE_API);        
         
 
-        const axios = require('axios').default;
-        let lng:number = 0.0;
-        let lat:number = 0.0;
-        axios.get(dynURL).then(function (responce:any) {
-            console.log(responce);
-            lng = responce.data.results[0].geometry.location.lng;
-            lat = responce.data.results[0].geometry.location.lat;
-        }).catch(function (error:any) {
-            console.log(error);
-        }).then(function () {
-            console.log("hit correct return");
-            return new GeoLocModel(lng, lat);
-        });
-        // const https = require('https');
-        // https.get(dynURL, (res:any) => {
-        //     console.log('statusCode:', res.statusCode);
-        //     console.log('headers:', res.headers);
+    //     const axios = require('axios').default;
+    //     let lng:number = 0.0;
+    //     let lat:number = 0.0;
+    //     axios.get(dynURL).then(function (responce:any) {
+    //         console.log(responce);
+    //         lng = responce.data.results[0].geometry.location.lng;
+    //         lat = responce.data.results[0].geometry.location.lat;
+    //     }).catch(function (error:any) {
+    //         console.log(error);
+    //     }).then(function () {
+    //         console.log("hit correct return");
+    //         return new GeoLocModel(lng, lat);
+    //     });
+    //     // const https = require('https');
+    //     // https.get(dynURL, (res:any) => {
+    //     //     console.log('statusCode:', res.statusCode);
+    //     //     console.log('headers:', res.headers);
             
-        //     res.on('data', (d:any) => {
-        //         process.stdout.write(d);
-        //     });
-        // }).on('error', (e:any) => {
-        //     console.error(e)
-        // })
-        // const request = require('request');
-        // request(dynURL, { json: true }, 
-        //     (err: any, res: any, body: { results:any }) => { 
-        //         if (err) { 
-        //             return console.log(err); } 
-        //         console.log(body.results[0].geometry.location);
-        //         gl.lng = body.results[0].geometry.location.lng;
-        //         gl.lat = body.results[0].geometry.location.lat;
-        //     });
-        return new GeoLocModel(lng, lat);
-    }
+    //     //     res.on('data', (d:any) => {
+    //     //         process.stdout.write(d);
+    //     //     });
+    //     // }).on('error', (e:any) => {
+    //     //     console.error(e)
+    //     // })
+    //     // const request = require('request');
+    //     // request(dynURL, { json: true }, 
+    //     //     (err: any, res: any, body: { results:any }) => { 
+    //     //         if (err) { 
+    //     //             return console.log(err); } 
+    //     //         console.log(body.results[0].geometry.location);
+    //     //         gl.lng = body.results[0].geometry.location.lng;
+    //     //         gl.lat = body.results[0].geometry.location.lat;
+    //     //     });
+    //     return new GeoLocModel(lng, lat);
+   // }
 }

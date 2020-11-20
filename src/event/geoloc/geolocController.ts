@@ -11,7 +11,7 @@ export class GeoLocController {
     static zipLookup = "https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&q=&facet=state&facet=timezone&facet=dst&refine.zip=<<zip>>";
 
     //getEventsCenteredOnLngLat
-    //sends the specific project as JSON with id=:id
+    //Sends list of events centered around the given longitude and latitude
     getEventsCenteredOnLngLat(req: express.Request, res: express.Response) {
         const lng_lat = req.params.lng_lat.replace('"', '').split(',').map((x) => parseFloat(x));
         GeoLocController.db.getRecords(GeoLocController.eventsTable, 
@@ -24,6 +24,8 @@ export class GeoLocController {
             .catch((reason) => res.status(500).send(reason).end());
     }
 
+    //getEventsCenteredOnLngLatCustomRadius
+    //Sends list of events centered around the given longitude and latitude with a custom radius
     getEventsCenteredOnLngLatCustomRadius(req: express.Request, res: express.Response) {
         const lng_lat = req.params.lng_lat.replace('"', '').split(',').map((x) => parseFloat(x));
         const rad = parseFloat(req.params.rad.replace('"', ""));
@@ -37,6 +39,8 @@ export class GeoLocController {
             .catch((reason) => res.status(500).send(reason).end());
     }
 
+    //getEventsCenteredOnZip
+    //Sends list of events centered around the given zip code
     getEventsCenteredOnZip(req: express.Request, res:express.Response) {
         const zip = req.params.zip.replace('"', '');
         const fetch = require('node-fetch');
@@ -56,6 +60,8 @@ export class GeoLocController {
         })();
     }
 
+    //getEventsCenteredOnZipCustomRadius
+    //Sends list of events centered around the given zip code with a custom radius
     getEventsCenteredOnZipCustomRadius(req: express.Request, res:express.Response) {
         const zip = req.params.zip.replace('"', '');
         const fetch = require('node-fetch');

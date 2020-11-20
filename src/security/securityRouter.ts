@@ -2,7 +2,7 @@ import { AppRouter } from "../common/AppRouter";
 import { SecurityController } from "./securityController";
 import { SecurityMiddleware } from "./securityMiddleware";
 
-//Router for security portion of the api
+//Router for security portion of the API
 export class SecurityRouter extends AppRouter{
     
     constructor(){super();}

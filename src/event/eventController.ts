@@ -7,6 +7,7 @@ export class EventsController {
     static db: Database = new Database(Config.url_elevated, "DEV");
     static eventsTable = 'EVENT';
     //getEvents
+    //returns the list of all events in the database as a JSON
     getEvents(req: express.Request, res: express.Response) {
         EventsController.db.getRecords(EventsController.eventsTable, {})
             .then((results) => res.send({ fn: 'getEvents', status: 'success', data: results }).end())
@@ -14,7 +15,7 @@ export class EventsController {
 
     }
     //getEventByID
-    //sends the specific project as JSON with id=:id
+    //returns a specific event in the database as JSON with id: id
     getEventByID(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
@@ -22,7 +23,7 @@ export class EventsController {
             .catch((reason) => res.status(500).send(reason).end());
     }
     //getRegisteredInd
-    //returns the list of registered attendees for the given event
+    //returns the list of registered attendees for the given event in the database as JSON with id: id
     getRegisteredInd(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
         EventsController.db.getRecords(EventsController.eventsTable, { _id: id })
@@ -34,10 +35,10 @@ export class EventsController {
             .catch((reason) => res.status(500).send(reason).end());
     }
     //createEvent
-    //adds the event to the database
+    //adds the event to the database with id: id
     createEvent(req: express.Request, res: express.Response) {
         const event: EventsModel = EventsModel.fromObject(req.body);
-
+        
         EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
             .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
@@ -55,7 +56,7 @@ export class EventsController {
 
     }
     //updateAttendees
-    //adds user to end of attendees list
+    //adds user to end of attendees list for given event in the database with id: id
     updateAttendees(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
         const data = req.body;
