@@ -23,18 +23,6 @@ export class GeoLocModel{
         this.lat = lat;
     }
 
-    async testMeth(dynURL:string) {
-        try {
-            const axios = require('axios').default;
-            const response = await axios.get(dynURL);
-            console.log(response);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            console.log();
-        }
-    }
-
     static googleGeoCoding(combinedAddress:string) {
         const addressComponents = combinedAddress.split('+');
         let dynURL = Config.GOOGLE_GEOCODING
