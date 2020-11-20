@@ -4,12 +4,12 @@ import { UserController } from "./userController";
 import { BusRouter } from './bus/busRouter';
 import { IndRouter } from './ind/indRouter';
 
-//This is just an example second router to show how additional routers can be added
+//Router for user portion of the API
 export class UserRouter extends AppRouter{
     static userController: UserController=new UserController();
     constructor(){super();}
 
-    //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
+    //called by the framework to add the routes for the user portion of the API
     setupRoutes(): void {      
         this.addRouter('/bus', new BusRouter());
         this.addRouter('/ind', new IndRouter());
@@ -17,5 +17,6 @@ export class UserRouter extends AppRouter{
         this.expressRouter.post('/',[SecurityMiddleware.RequireAuth],UserRouter.userController.createUser);
         this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.updateUser);
         this.expressRouter.delete('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.deleteUser);
+        this.expressRouter.get('/:id/type',[SecurityMiddleware.RequireAuth],UserRouter.userController.getType);
     }    
 }
