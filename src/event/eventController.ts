@@ -38,7 +38,7 @@ export class EventsController {
     //adds the event to the database with id: id
     createEvent(req: express.Request, res: express.Response) {
         const event: EventsModel = EventsModel.fromObject(req.body);
-
+        
         EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
             .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());

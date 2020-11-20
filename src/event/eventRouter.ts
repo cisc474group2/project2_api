@@ -11,13 +11,12 @@ export class EventRouter extends AppRouter{
     //called by the framework to add the routes for the events portion of the API
     setupRoutes(): void {
         this.addRouter('/geo',new GeoLocRouter());        
-
         this.expressRouter.get('/',EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id',EventRouter.eventController.getEventByID);
-        this.expressRouter.post('/',EventRouter.eventController.createEvent);
-        this.expressRouter.put('/:id',EventRouter.eventController.updateEvent);
+        this.expressRouter.post('/',[SecurityMiddleware.RequireAuth], EventRouter.eventController.createEvent);
+        this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],EventRouter.eventController.updateEvent);
         this.expressRouter.delete('/:id',EventRouter.eventController.deleteEvent);
         this.expressRouter.get('/:id/registered',EventRouter.eventController.getRegisteredInd);
-        this.expressRouter.put('/:id/registered',EventRouter.eventController.updateAttendees);
+        this.expressRouter.put('/:id/registered',[SecurityMiddleware.RequireAuth],EventRouter.eventController.updateAttendees);
     }    
 }
