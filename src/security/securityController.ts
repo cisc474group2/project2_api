@@ -62,7 +62,7 @@ export class SecurityController {
         
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then((userRecord: any) => {
-                if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
+                if (userRecord) return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exists' }).end();
                 SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then((result: boolean) => {
                     SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
                         .then((userRecord: any) => {
@@ -82,7 +82,10 @@ export class SecurityController {
     authorize(req: express.Request, res: express.Response, next: express.NextFunction) {
         //validate that req.authUser exists, if so, return the user's email address.
         console.log();
-        res.send({ fn: 'authorize', status: 'success', data:{email: req.body.authUser.email, type:req.body.authUser.type} }).end();
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.authUser.email })
+        .then((results) => res.send({ fn: 'authorize', status: 'success', data: {email: results.email, type: results.type, 
+            type_obj: results.type_obj, reg_events: results.reg_events} }).end())
+        .catch((reason) => res.status(500).send(reason).end());
     }
     //changePwd - POST
     //chages the password of the user represented in the token.  Expects password in the body of the POST
