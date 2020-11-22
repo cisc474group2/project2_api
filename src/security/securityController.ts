@@ -83,7 +83,7 @@ export class SecurityController {
         //validate that req.authUser exists, if so, return the user's email address.
         console.log();
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.authUser.email })
-        .then((results) => res.send({ fn: 'authorize', status: 'success', data: {email: results.email, type: results.type, 
+        .then((results) => res.send({ fn: 'authorize', status: 'success', data: {_id: results._id, email: results.email, type: results.type, 
             type_obj: results.type_obj, reg_events: results.reg_events} }).end())
         .catch((reason) => res.status(500).send(reason).end());
     }
