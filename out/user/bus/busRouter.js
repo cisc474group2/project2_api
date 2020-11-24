@@ -17,13 +17,13 @@ exports.BusRouter = void 0;
 var AppRouter_1 = require("../../common/AppRouter");
 var securityMiddleware_1 = require("../../security/securityMiddleware");
 var busController_1 = require("./busController");
-//This is just an example second router to show how additional routers can be added
+//Router for business portion of the API
 var BusRouter = /** @class */ (function (_super) {
     __extends(BusRouter, _super);
     function BusRouter() {
         return _super.call(this) || this;
     }
-    //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
+    //called by the framework to add the routes for the business portion of the API
     BusRouter.prototype.setupRoutes = function () {
         this.expressRouter.get('/', BusRouter.BusController.getAllBusinesses);
         this.expressRouter.get('/:id', BusRouter.BusController.getBusiness);

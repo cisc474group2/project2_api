@@ -3,12 +3,12 @@ import { AppRouter } from "../../common/AppRouter";
 import { SecurityMiddleware } from "../../security/securityMiddleware";
 import { BusController } from './busController';
 
-//This is just an example second router to show how additional routers can be added
+//Router for business portion of the API
 export class BusRouter extends AppRouter{
     static BusController: BusController=new BusController();
     constructor(){super();}
 
-    //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
+    //called by the framework to add the routes for the business portion of the API
     setupRoutes(): void {      
         this.expressRouter.get('/',BusRouter.BusController.getAllBusinesses);
         this.expressRouter.get('/:id',BusRouter.BusController.getBusiness);
