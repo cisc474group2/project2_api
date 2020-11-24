@@ -38,7 +38,7 @@ export class GeoLocModel{
             let lng:number = 0.0;
             let lat:number = 0.0;
             axios.get(dynURL).then(function (responce:any) {
-                console.log(responce);
+                //console.log(responce);
                 lng = responce.data.results[0].geometry.location.lng;
                 lat = responce.data.results[0].geometry.location.lat;
                 return resolve(new GeoLocModel(lng, lat));
