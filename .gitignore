@@ -4,4 +4,4 @@ node_modules/
 src/config.ts
 out/
 out/config.js
-out/common/MongoDB.js
+out/**
