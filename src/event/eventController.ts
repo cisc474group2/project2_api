@@ -2,6 +2,7 @@ import express, { RequestHandler } from 'express';
 import { EventsModel } from './eventModel';
 import { Database } from '../common/MongoDB';
 import { Config } from '../config';
+import { GeoLocModel } from './geoloc/geolocModel';
 
 export class EventsController {
     static db: Database = new Database(Config.url_elevated, "DEV");
@@ -37,11 +38,20 @@ export class EventsController {
     //createEvent
     //adds the event to the database with id: id
     createEvent(req: express.Request, res: express.Response) {
-        const event: EventsModel = EventsModel.fromObject(req.body);
-        
-        EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
+        GeoLocModel.googleGeoCoding(req.body.event_address).then(result => {
+            const event: EventsModel = EventsModel.fromObject(req.body);
+            event.event_geoloc = result;
+            
+            //Insert Event
+            EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
             .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
+
+        }).catch(error => {
+            console.log("Event not added\n" + error);
+            res.status(500).send("Event not added\n" + error).end();
+        });
+        
     }
     //updateEvent
     //updates the event in the database with id :id
