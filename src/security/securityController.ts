@@ -69,7 +69,7 @@ export class SecurityController {
             GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(
                 result => {
                     type_obj = new BusModel();
-                    type_obj.busName = req.body.type_obj.bus_name;
+                    type_obj.bus_name = req.body.type_obj.bus_name;
                     type_obj.cName = req.body.type_obj.contact_name;
                     type_obj.cPhone = req.body.type_obj.contact_phone;
                     type_obj.cEmail = req.body.type_obj.contact_email;

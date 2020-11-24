@@ -1,7 +1,7 @@
 import { GeoLocModel } from '../../event/geoloc/geolocModel';
 
 export class BusModel{
-    busName='';
+    bus_name='';
     cName='';
     cPhone='';
     cEmail='';
@@ -11,7 +11,7 @@ export class BusModel{
 
     static fromObject(object:any):BusModel{
         const p:BusModel=new BusModel();
-        p.busName=object.busName;
+        p.bus_name=object.bus_name;
         p.cName=object.cName;
         p.cPhone=object.cPhone;
         p.cEmail=object.cEmail;
@@ -21,7 +21,7 @@ export class BusModel{
         return p;
     }
     toObject():any{
-        return {name:this.busName,
+        return {name:this.bus_name,
             contact_name:this.cName,
             contact_phone:this.cPhone,
             contact_email:this.cEmail,
