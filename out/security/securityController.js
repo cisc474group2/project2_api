@@ -71,7 +71,7 @@ var SecurityController = /** @class */ (function () {
         else if (user_type == "B") {
             geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(function (result) {
                 type_obj = new busModel_1.BusModel();
-                type_obj.busName = req.body.type_obj.bus_name;
+                type_obj.bus_name = req.body.type_obj.bus_name;
                 type_obj.cName = req.body.type_obj.contact_name;
                 type_obj.cPhone = req.body.type_obj.contact_phone;
                 type_obj.cEmail = req.body.type_obj.contact_email;
@@ -98,7 +98,7 @@ var SecurityController = /** @class */ (function () {
         //validate that req.authUser exists, if so, return the user's email address.
         console.log();
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.authUser.email })
-            .then(function (results) { return res.send({ fn: 'authorize', status: 'success', data: { email: results.email, type: results.type,
+            .then(function (results) { return res.send({ fn: 'authorize', status: 'success', data: { _id: results._id, email: results.email, type: results.type,
                 type_obj: results.type_obj, reg_events: results.reg_events } }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };

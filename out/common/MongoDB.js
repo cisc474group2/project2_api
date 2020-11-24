@@ -51,7 +51,6 @@ var Database = /** @class */ (function () {
                     reject(err);
                 var dbo = db.db(dbname);
                 update.$set.update_date = new Date();
-                console.log(update);
                 //update.update_date = new Date();
                 dbo.collection(collection).updateOne(filter, update, function (err, result) {
                     if (err)
