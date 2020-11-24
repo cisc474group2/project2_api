@@ -17,7 +17,7 @@ exports.SecurityRouter = void 0;
 var AppRouter_1 = require("../common/AppRouter");
 var securityController_1 = require("./securityController");
 var securityMiddleware_1 = require("./securityMiddleware");
-//Router for security portion of the api
+//Router for security portion of the API
 var SecurityRouter = /** @class */ (function (_super) {
     __extends(SecurityRouter, _super);
     function SecurityRouter() {
@@ -26,7 +26,7 @@ var SecurityRouter = /** @class */ (function (_super) {
     //called by the framework to add the routes for the security portion of the API
     SecurityRouter.prototype.setupRoutes = function () {
         var securityController = new securityController_1.SecurityController();
-        this.expressRouter.get('/auth', [securityMiddleware_1.SecurityMiddleware.RequireAuth], securityController.authorize);
+        this.expressRouter.get('/authorize', [securityMiddleware_1.SecurityMiddleware.RequireAuth], securityController.authorize);
         this.expressRouter.post('/login', securityController.login);
         this.expressRouter.post('/register', securityController.register);
         this.expressRouter.post('/changepwd', [securityMiddleware_1.SecurityMiddleware.RequireAuth], securityController.changePwd);

@@ -10,9 +10,9 @@ export class UserController {
     //createUser
     //adds the user to the database
     createUser(req: express.Request, res: express.Response) {
-        const proj: UserModel = UserModel.fromObject(req.body);
-
-        UserController.db.addRecord(UserController.userTable, proj.toObject())
+        const user: UserModel = UserModel.fromObject(req.body);
+    
+        UserController.db.addRecord(UserController.userTable, user.toObject())
             .then((result: boolean) => res.send({ fn: 'createUser', status: 'success' }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
