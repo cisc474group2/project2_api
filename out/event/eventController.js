@@ -8,13 +8,14 @@ var EventsController = /** @class */ (function () {
     function EventsController() {
     }
     //getEvents
+    //returns the list of all events in the database as a JSON
     EventsController.prototype.getEvents = function (req, res) {
         EventsController.db.getRecords(EventsController.eventsTable, {})
             .then(function (results) { return res.send({ fn: 'getEvents', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //getEventByID
-    //sends the specific project as JSON with id=:id
+    //returns a specific event in the database as JSON with id: id
     EventsController.prototype.getEventByID = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
@@ -22,7 +23,7 @@ var EventsController = /** @class */ (function () {
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //getRegisteredInd
-    //returns the list of registered attendees for the given event
+    //returns the list of registered attendees for the given event in the database as JSON with id: id
     EventsController.prototype.getRegisteredInd = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         EventsController.db.getRecords(EventsController.eventsTable, { _id: id })
@@ -34,7 +35,7 @@ var EventsController = /** @class */ (function () {
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //createEvent
-    //adds the event to the database
+    //adds the event to the database with id: id
     EventsController.prototype.createEvent = function (req, res) {
         var event = eventModel_1.EventsModel.fromObject(req.body);
         EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
@@ -53,7 +54,7 @@ var EventsController = /** @class */ (function () {
             .catch(function (err) { return res.send({ fn: 'updateEvent', status: 'failure', data: err }).end(); });
     };
     //updateAttendees
-    //adds user to end of attendees list
+    //adds user to end of attendees list for given event in the database with id: id
     EventsController.prototype.updateAttendees = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         var data = req.body;
