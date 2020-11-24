@@ -62,7 +62,7 @@ export class UserController {
                 if(!results.reg_events.includes(data.reg_events)){
                     reg_events.push(data.reg_events);
                 }
-                UserController.db.updateRecord(UserController.userTable, { _id: id }, { $set: {reg_events: reg_events} })
+                UserController.db.updateRecord(UserController.userTable, { _id: id }, { $set: {reg_events: reg_events, update_date: '<<DATE>>' } })
                     .then((results) => results ? (res.send({ fn: 'updateUserEvents', status: 'success' })) : (res.send({ fn: 'updateUserEvents', status: 'failure', data: 'Not found' })).end())
                     .catch(err => res.send({ fn: 'updateUserEvents', status: 'failure', data: err })
                     .end());

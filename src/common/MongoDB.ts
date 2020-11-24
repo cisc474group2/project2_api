@@ -46,7 +46,8 @@ export class Database {
             MongoClient.connect(url, function (err, db) {
                 if (err) reject(err);
                 const dbo = db.db(dbname);
-                update.update_date = new Date();
+                update.$set.update_date = new Date();
+                //update.update_date = new Date();
                 dbo.collection(collection).updateOne(filter,update,(err, result) => {
                     if (err) reject(err);
                     db.close();

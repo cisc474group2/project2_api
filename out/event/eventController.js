@@ -68,7 +68,7 @@ var EventsController = /** @class */ (function () {
             if (!results.registered_ind.includes(data.registered_ind)) {
                 registered_ind.push(data.registered_ind);
             }
-            EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: { registered_ind: registered_ind } })
+            EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: { registered_ind: registered_ind, update_date: '<<DATE>>' } })
                 .then(function (results) { return results ? (res.send({ fn: 'updateAttendees', status: 'success' })) : (res.send({ fn: 'updateAttendees', status: 'failure', data: 'Not found' })).end(); })
                 .catch(function (err) { return res.send({ fn: 'updateAttendees', status: 'failure', data: err }).end(); });
         })
