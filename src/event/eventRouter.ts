@@ -17,6 +17,6 @@ export class EventRouter extends AppRouter{
         this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],EventRouter.eventController.updateEvent);
         this.expressRouter.delete('/:id',EventRouter.eventController.deleteEvent);
         this.expressRouter.get('/:id/registered',EventRouter.eventController.getRegisteredInd);
-        this.expressRouter.put('/:id/registered',[SecurityMiddleware.RequireAuth],EventRouter.eventController.updateAttendees);
+        this.expressRouter.put('/:id/registered', EventRouter.eventController.updateAttendees);
     }    
 }
