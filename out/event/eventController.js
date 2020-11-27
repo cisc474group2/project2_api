@@ -4,6 +4,7 @@ exports.EventsController = void 0;
 var eventModel_1 = require("./eventModel");
 var MongoDB_1 = require("../common/MongoDB");
 var config_1 = require("../config");
+var geolocModel_1 = require("./geoloc/geolocModel");
 var EventsController = /** @class */ (function () {
     function EventsController() {
     }
@@ -37,10 +38,17 @@ var EventsController = /** @class */ (function () {
     //createEvent
     //adds the event to the database with id: id
     EventsController.prototype.createEvent = function (req, res) {
-        var event = eventModel_1.EventsModel.fromObject(req.body);
-        EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
-            .then(function (result) { return res.send({ fn: 'createEvent', status: 'success' }).end(); })
-            .catch(function (reason) { return res.status(500).send(reason).end(); });
+        geolocModel_1.GeoLocModel.googleGeoCoding(req.body.event_address).then(function (result) {
+            var event = eventModel_1.EventsModel.fromObject(req.body);
+            event.event_geoloc = result;
+            //Insert Event
+            EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
+                .then(function (result) { return res.send({ fn: 'createEvent', status: 'success' }).end(); })
+                .catch(function (reason) { return res.status(500).send(reason).end(); });
+        }).catch(function (error) {
+            console.log("Event not added\n" + error);
+            res.status(500).send("Event not added\n" + error).end();
+        });
     };
     //updateEvent
     //updates the event in the database with id :id

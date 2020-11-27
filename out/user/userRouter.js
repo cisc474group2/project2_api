@@ -33,7 +33,7 @@ var UserRouter = /** @class */ (function (_super) {
         this.expressRouter.put('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.updateUser);
         this.expressRouter.delete('/:id', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.deleteUser);
         this.expressRouter.get('/:id/type', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.getType);
-        this.expressRouter.put('/:id/registered', [securityMiddleware_1.SecurityMiddleware.RequireAuth], UserRouter.userController.updateUserEvents);
+        this.expressRouter.put('/:id/registered', UserRouter.userController.updateUserEvents);
     };
     UserRouter.userController = new userController_1.UserController();
     return UserRouter;
