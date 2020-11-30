@@ -59,14 +59,21 @@ var SecurityController = /** @class */ (function () {
         var user_type = req.body.type;
         var type_obj = null;
         if (user_type == "I") {
-            type_obj = new indModel_1.IndModel();
-            type_obj.fName = req.body.type_obj.first_name;
-            type_obj.lName = req.body.type_obj.last_name;
-            //do record insert here
-            user.type = user_type;
-            user.type_obj = type_obj;
-            var sc = new SecurityController();
-            sc.privateRegister(req, res, user);
+            geolocModel_1.GeoLocModel.googleZipCoding(req.body.type_obj.zip).then(function (result) {
+                type_obj = new indModel_1.IndModel();
+                type_obj.fName = req.body.type_obj.first_name;
+                type_obj.lName = req.body.type_obj.last_name;
+                type_obj.zip = req.body.type_obj.zip;
+                type_obj.geoloc = result;
+                //do record insert here
+                user.type = user_type;
+                user.type_obj = type_obj;
+                var sc = new SecurityController();
+                sc.privateRegister(req, res, user);
+            }).catch(function (err) {
+                console.log(err);
+                res.status(500).send(err).end();
+            });
         }
         else if (user_type == "B") {
             geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(function (result) {
@@ -84,6 +91,7 @@ var SecurityController = /** @class */ (function () {
                 sc.privateRegister(req, res, user);
             }).catch(function (err) {
                 console.log(err);
+                res.status(500).send(err).end();
             });
         }
         else {

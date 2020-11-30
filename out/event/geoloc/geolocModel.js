@@ -42,6 +42,27 @@ var GeoLocModel = /** @class */ (function () {
             });
         });
     };
+    GeoLocModel.googleZipCoding = function (zip) {
+        return new Promise(function (resolve, reject) {
+            var dynURL = config_1.Config.GOOGLE_ZIP_GEOCODING
+                .replace('<<OUT>>', 'json')
+                .replace('<<COUNTRY>>', 'US')
+                .replace('<<POSTAL>>', encodeURIComponent(zip))
+                .replace('<<KEY>>', config_1.Config.GOOGLE_API);
+            var axios = require('axios').default;
+            var lng = 0.0;
+            var lat = 0.0;
+            axios.get(dynURL).then(function (responce) {
+                //console.log(responce);
+                lng = responce.data.results[0].geometry.location.lng;
+                lat = responce.data.results[0].geometry.location.lat;
+                return resolve(new GeoLocModel(lng, lat));
+            }).catch(function (error) {
+                console.log(error);
+                return reject(error);
+            });
+        });
+    };
     return GeoLocModel;
 }());
 exports.GeoLocModel = GeoLocModel;

@@ -48,4 +48,27 @@ export class GeoLocModel{
             });
         });
     }
+
+    static googleZipCoding(zip:number):Promise<GeoLocModel> {
+        return new Promise(function (resolve, reject) {
+            let dynURL = Config.GOOGLE_ZIP_GEOCODING
+            .replace('<<OUT>>', 'json')
+            .replace('<<COUNTRY>>', 'US')
+            .replace('<<POSTAL>>', encodeURIComponent(zip))
+            .replace('<<KEY>>', Config.GOOGLE_API);
+
+            const axios = require('axios').default;
+            let lng:number = 0.0;
+            let lat:number = 0.0;
+            axios.get(dynURL).then(function (responce:any) {
+                //console.log(responce);
+                lng = responce.data.results[0].geometry.location.lng;
+                lat = responce.data.results[0].geometry.location.lat;
+                return resolve(new GeoLocModel(lng, lat));
+            }).catch(function (error:any) {
+                console.log(error);
+                return reject(error);
+            });
+        });
+    }
 }
