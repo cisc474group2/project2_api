@@ -44,13 +44,17 @@ export class EventsController {
             
             //Insert Event
             EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
-            .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success' }).end())
+            .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success', data:event._id}).end())
             .catch((reason) => res.status(500).send(reason).end());
+
+            
 
         }).catch(error => {
             console.log("Event not added\n" + error);
             res.status(500).send("Event not added\n" + error).end();
         });
+
+        
         
     }
     //updateEvent
