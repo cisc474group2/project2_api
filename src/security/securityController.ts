@@ -39,6 +39,7 @@ export class SecurityController {
             type_obj = new IndModel();
             type_obj.fName = req.body.type_obj.first_name;
             type_obj.lName = req.body.type_obj.last_name;
+            type_obj.zip = req.body.type_obj.zip;
         }
         else if (user_type == "B") {
             type_obj = new BusModel();
