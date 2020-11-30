@@ -43,7 +43,7 @@ var GeoLocController = /** @class */ (function () {
     function GeoLocController() {
     }
     //getEventsCenteredOnLngLat
-    //sends the specific project as JSON with id=:id
+    //Sends list of events centered around the given longitude and latitude
     GeoLocController.prototype.getEventsCenteredOnLngLat = function (req, res) {
         var lng_lat = req.params.lng_lat.replace('"', '').split(',').map(function (x) { return parseFloat(x); });
         GeoLocController.db.getRecords(GeoLocController.eventsTable, { 'event_geoloc': { $geoWithin: { $centerSphere: [[lng_lat[0], lng_lat[1]],
@@ -53,6 +53,8 @@ var GeoLocController = /** @class */ (function () {
             .then(function (results) { return res.send({ fn: 'getEventsCenteredOnLngLat', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    //getEventsCenteredOnLngLatCustomRadius
+    //Sends list of events centered around the given longitude and latitude with a custom radius
     GeoLocController.prototype.getEventsCenteredOnLngLatCustomRadius = function (req, res) {
         var lng_lat = req.params.lng_lat.replace('"', '').split(',').map(function (x) { return parseFloat(x); });
         var rad = parseFloat(req.params.rad.replace('"', ""));
@@ -63,6 +65,8 @@ var GeoLocController = /** @class */ (function () {
             .then(function (results) { return res.send({ fn: 'getEventsCenteredOnLngLat', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    //getEventsCenteredOnZip
+    //Sends list of events centered around the given zip code
     GeoLocController.prototype.getEventsCenteredOnZip = function (req, res) {
         var _this = this;
         var zip = req.params.zip.replace('"', '');
@@ -90,6 +94,8 @@ var GeoLocController = /** @class */ (function () {
             });
         }); })();
     };
+    //getEventsCenteredOnZipCustomRadius
+    //Sends list of events centered around the given zip code with a custom radius
     GeoLocController.prototype.getEventsCenteredOnZipCustomRadius = function (req, res) {
         var _this = this;
         var zip = req.params.zip.replace('"', '');

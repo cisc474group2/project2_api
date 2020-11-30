@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventsModel = void 0;
+var geolocModel_1 = require("./geoloc/geolocModel");
 var EventsModel = /** @class */ (function () {
     function EventsModel() {
         this._id = '';
@@ -8,7 +9,7 @@ var EventsModel = /** @class */ (function () {
         this.bus_id = '';
         this.description = '';
         this.registered_ind = [];
-        this.event_geoloc = '';
+        this.event_geoloc = new geolocModel_1.GeoLocModel;
         this.event_address = '';
         this.start_time = '';
         this.end_time = '';
