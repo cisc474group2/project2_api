@@ -87,6 +87,29 @@ export class EventsController {
                 return res.status(500).send(reason).end();
             });
     }
+    //deleteAttendee
+    //deletes user from list of attendees
+    deleteAttendee(req: express.Request, res: express.Response) {
+        const id = Database.stringToId(req.params.id);
+        const data = req.body;
+        delete data.authUser;
+        var registered_ind = [];
+        EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
+            .then(results => {
+                registered_ind=results.registered_ind;
+                if (registered_ind==null) registered_ind=[];
+                if(results.registered_ind.includes(data.registered_ind)){
+                    var index = registered_ind.indexOf(data.registered_ind);
+                    registered_ind.splice(index, 1);
+                }
+                EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: {registered_ind: registered_ind, update_date: '<<DATE>>' }})
+                    .then((results) => results ? (res.send({ fn: 'deleteAttendee', status: 'success' })) : (res.send({ fn: 'deleteAttendee', status: 'failure', data: 'Not found' })).end())
+                    .catch(err => res.send({ fn: 'deleteAttendee', status: 'failure', data: err }).end());
+            })
+            .catch((reason) => {
+                return res.status(500).send(reason).end();
+            });
+    }
     //deleteEvent
     //deletes the event in the database with id :id
     deleteEvent(req: express.Request, res: express.Response) {

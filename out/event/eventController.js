@@ -84,6 +84,32 @@ var EventsController = /** @class */ (function () {
             return res.status(500).send(reason).end();
         });
     };
+    //deleteAttendee
+    //deletes user from list of attendees
+    EventsController.prototype.deleteAttendee = function (req, res) {
+        var id = MongoDB_1.Database.stringToId(req.params.id);
+        var data = req.body;
+        delete data.authUser;
+        var registered_ind = [];
+        EventsController.db.getOneRecord(EventsController.eventsTable, { _id: id })
+            .then(function (results) {
+            registered_ind = results.registered_ind;
+            if (registered_ind == null)
+                registered_ind = [];
+            if (results.registered_ind.includes(data.registered_ind)) {
+                var index = registered_ind.indexOf(data.registered_ind);
+                registered_ind.splice(index, 1);
+                console.log(index);
+                console.log(registered_ind);
+            }
+            EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: { registered_ind: registered_ind, update_date: '<<DATE>>' } })
+                .then(function (results) { return results ? (res.send({ fn: 'deleteAttendee', status: 'success' })) : (res.send({ fn: 'deleteAttendee', status: 'failure', data: 'Not found' })).end(); })
+                .catch(function (err) { return res.send({ fn: 'deleteAttendee', status: 'failure', data: err }).end(); });
+        })
+            .catch(function (reason) {
+            return res.status(500).send(reason).end();
+        });
+    };
     //deleteEvent
     //deletes the event in the database with id :id
     EventsController.prototype.deleteEvent = function (req, res) {

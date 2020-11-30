@@ -18,10 +18,6 @@ export class UserRouter extends AppRouter{
         this.expressRouter.put('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.updateUser);
         this.expressRouter.delete('/:id',[SecurityMiddleware.RequireAuth],UserRouter.userController.deleteUser);
         this.expressRouter.get('/:id/type',[SecurityMiddleware.RequireAuth],UserRouter.userController.getType);
-<<<<<<< HEAD
-        this.expressRouter.put('/:id/registered',UserRouter.userController.updateUserEvents);
-=======
         this.expressRouter.put('/:id/registered', UserRouter.userController.updateUserEvents);
->>>>>>> 200300ff2e7d4b16c2c66dae8816b45f77aec2a9
     }    
 }

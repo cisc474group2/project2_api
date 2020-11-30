@@ -21,7 +21,7 @@ var UserController = /** @class */ (function () {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         var data = req.body;
         delete data.authUser;
-        delete data.reg_events;
+        //       delete data.reg_events;
         UserController.db.updateRecord(UserController.userTable, { _id: id }, { $set: req.body })
             .then(function (results) { return results ? (res.send({ fn: 'updateUser', status: 'success' })) : (res.send({ fn: 'updateUser', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (err) { return res.send({ fn: 'updateUser', status: 'failure', data: err }).end(); });
