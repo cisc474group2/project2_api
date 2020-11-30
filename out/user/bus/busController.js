@@ -3,19 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BusController = void 0;
 var MongoDB_1 = require("../../common/MongoDB");
 var config_1 = require("../../config");
-//This is just an example of a second controller attached to the security module
 var BusController = /** @class */ (function () {
     function BusController() {
     }
-    //getProjects
-    //sends a json object with all projects in the system that match :year
+    //getAllBusinesses
+    //sends a json object with all businesses in the database
     BusController.prototype.getAllBusinesses = function (req, res) {
         BusController.db.getRecords(BusController.userTable, { type: BusController.businessKey })
             .then(function (results) { return res.send({ fn: 'getAllBusinesses', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
-    //getProject
-    //sends the specific project as JSON with id=:id
+    //getBusiness
+    //sends the specific business as JSON with id=:id
     BusController.prototype.getBusiness = function (req, res) {
         var id = MongoDB_1.Database.stringToId(req.params.id);
         BusController.db.getOneRecord(BusController.userTable, { _id: id, type: BusController.businessKey })

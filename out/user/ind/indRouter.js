@@ -16,13 +16,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.IndRouter = void 0;
 var AppRouter_1 = require("../../common/AppRouter");
 var indController_1 = require("./indController");
-//This is just an example second router to show how additional routers can be added
+//Router for individual portion of the API
 var IndRouter = /** @class */ (function (_super) {
     __extends(IndRouter, _super);
     function IndRouter() {
         return _super.call(this) || this;
     }
-    //sets up the routes within this module shows an example of a route that requires authorization, and one that does not
+    //called by the framework to add the routes for the individual portion of the API
     IndRouter.prototype.setupRoutes = function () {
         this.expressRouter.get('/', IndRouter.IndController.getAllIndividuals);
         this.expressRouter.get('/:id', IndRouter.IndController.getOneIndividual);

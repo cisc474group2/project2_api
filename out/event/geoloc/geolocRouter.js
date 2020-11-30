@@ -16,13 +16,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeoLocRouter = void 0;
 var AppRouter_1 = require("../../common/AppRouter");
 var geolocController_1 = require("./geolocController");
-//Router for events portion of the api
+//Router for geolocation portion of the api
 var GeoLocRouter = /** @class */ (function (_super) {
     __extends(GeoLocRouter, _super);
     function GeoLocRouter() {
         return _super.call(this) || this;
     }
-    //called by the framework to add the routes for the security portion of the API
+    //called by the framework to add the routes for the geolocation portion of the API
     GeoLocRouter.prototype.setupRoutes = function () {
         this.expressRouter.get('/loc/:lng_lat', GeoLocRouter.geolocController.getEventsCenteredOnLngLat);
         this.expressRouter.get('/loc/:lng_lat/:rad', GeoLocRouter.geolocController.getEventsCenteredOnLngLatCustomRadius);

@@ -53,10 +53,12 @@ export class SecurityController {
         const user: UserModel = new UserModel(req.body.email, req.body.password);
         const user_type: string = req.body.type;
         let type_obj: IndModel | BusModel | null = null;
+        let detail_error = "unknown type passes";
 
         if (user_type == "I") {
             GeoLocModel.googleZipCoding(req.body.type_obj.zip).then(
                 result => {
+                    detail_error = "google api returned";
                     type_obj = new IndModel();
                     type_obj.fName = req.body.type_obj.first_name;
                     type_obj.lName = req.body.type_obj.last_name;
@@ -70,13 +72,14 @@ export class SecurityController {
                     sc.privateRegister(req, res, user);
                 }
             ).catch(err => {
-                console.log(err);
+                console.log(err, detail_error);
                 res.status(500).send(err).end()
             });
         }
         else if (user_type == "B") {
             GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(
                 result => {
+                    detail_error = "google api returned";
                     type_obj = new BusModel();
                     type_obj.bus_name = req.body.type_obj.bus_name;
                     type_obj.cName = req.body.type_obj.contact_name;
@@ -92,7 +95,7 @@ export class SecurityController {
                     const sc = new SecurityController();
                     sc.privateRegister(req, res, user);
                 }).catch(err => {
-                    console.log(err);
+                    console.log(err, detail_error);
                     res.status(500).send(err).end()
             });
         }

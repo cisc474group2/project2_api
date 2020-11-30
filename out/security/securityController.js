@@ -30,40 +30,12 @@ var SecurityController = /** @class */ (function () {
             res.send({ fn: 'login', status: 'success', data: { token: token, user: { email: req.body.email } } }).end();
         }).catch(function (err) { return res.sendStatus(500).end(); });
     };
-    //register - POST
-    //expects email and password fields to be set in the body of the post request
-    //sends a success message to caller on success, or a failure status code on failure
-    SecurityController.prototype.register = function (req, res, next) {
-        var user = new userModel_1.UserModel(req.body.email, req.body.password);
-        var user_type = req.body.type;
-        var type_obj = null;
-        if (user_type == "I") {
-            type_obj = new indModel_1.IndModel();
-            type_obj.fName = req.body.type_obj.first_name;
-            type_obj.lName = req.body.type_obj.last_name;
-        }
-        else if (user_type == "B") {
-            type_obj = new busModel_1.BusModel();
-            type_obj.busName = req.body.type_obj.bus_name;
-            type_obj.cName = req.body.type_obj.contact_name;
-            type_obj.cPhone = req.body.type_obj.contact_phone;
-            type_obj.cEmail = req.body.type_obj.contact_email;
-            type_obj.geoloc = geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address);
-            // type_obj.geoloc.lng = req.body.type_obj.geoloc.lng;
-            // type_obj.geoloc.lat = req.body.type_obj.geoloc.lat;
-            type_obj.mailAddress = req.body.type_obj.bus_address;
-            console.log("finished making entry");
-        }
-        else {
-            type_obj = null;
-        }
-        //Add if statement here for diff types
-        user.type = user_type;
-        user.type_obj = type_obj;
+    SecurityController.prototype.privateRegister = function (req, res, user) {
+        console.log("privateRegister");
         SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
             .then(function (userRecord) {
             if (userRecord)
-                return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exits' }).end();
+                return res.status(400).send({ fn: 'register', status: 'failure', data: 'User Exists' }).end();
             SecurityController.db.addRecord(SecurityController.usersTable, user.toObject()).then(function (result) {
                 SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.email })
                     .then(function (userRecord) {
@@ -79,6 +51,53 @@ var SecurityController = /** @class */ (function () {
             }).catch(function (reason) { return res.sendStatus(500).end(); });
         }).catch(function (reason) { return res.sendStatus(500).end(); });
     };
+    //register - POST
+    //expects email and password fields to be set in the body of the post request
+    //sends a success message to caller on success, or a failure status code on failure
+    SecurityController.prototype.register = function (req, res, next) {
+        var user = new userModel_1.UserModel(req.body.email, req.body.password);
+        var user_type = req.body.type;
+        var type_obj = null;
+        if (user_type == "I") {
+            geolocModel_1.GeoLocModel.googleZipCoding(req.body.type_obj.zip).then(function (result) {
+                type_obj = new indModel_1.IndModel();
+                type_obj.fName = req.body.type_obj.first_name;
+                type_obj.lName = req.body.type_obj.last_name;
+                type_obj.zip = req.body.type_obj.zip;
+                type_obj.geoloc = result;
+                //do record insert here
+                user.type = user_type;
+                user.type_obj = type_obj;
+                var sc = new SecurityController();
+                sc.privateRegister(req, res, user);
+            }).catch(function (err) {
+                console.log(err);
+                res.status(500).send(err).end();
+            });
+        }
+        else if (user_type == "B") {
+            geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(function (result) {
+                type_obj = new busModel_1.BusModel();
+                type_obj.bus_name = req.body.type_obj.bus_name;
+                type_obj.cName = req.body.type_obj.contact_name;
+                type_obj.cPhone = req.body.type_obj.contact_phone;
+                type_obj.cEmail = req.body.type_obj.contact_email;
+                type_obj.mailAddress = req.body.type_obj.bus_address;
+                type_obj.geoloc = result;
+                user.type = user_type;
+                user.type_obj = type_obj;
+                console.log("finished making entry");
+                var sc = new SecurityController();
+                sc.privateRegister(req, res, user);
+            }).catch(function (err) {
+                console.log(err);
+                res.status(500).send(err).end();
+            });
+        }
+        else {
+            console.log("Big Error at securityController/register");
+        }
+    };
     //authorize - GET
     //this code actually does nothing, but if it is secured at the route level, it will return the email address for the token that
     //was returned.  This is used to verify a token by a client application
@@ -86,7 +105,10 @@ var SecurityController = /** @class */ (function () {
     SecurityController.prototype.authorize = function (req, res, next) {
         //validate that req.authUser exists, if so, return the user's email address.
         console.log();
-        res.send({ fn: 'authorize', status: 'success', data: { email: req.body.authUser.email } }).end();
+        SecurityController.db.getOneRecord(SecurityController.usersTable, { email: req.body.authUser.email })
+            .then(function (results) { return res.send({ fn: 'authorize', status: 'success', data: { _id: results._id, email: results.email, type: results.type,
+                type_obj: results.type_obj, reg_events: results.reg_events } }).end(); })
+            .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
     //changePwd - POST
     //chages the password of the user represented in the token.  Expects password in the body of the POST
