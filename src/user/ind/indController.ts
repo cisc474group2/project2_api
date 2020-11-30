@@ -21,7 +21,7 @@ export class IndController {
     //sends the specific individual as JSON with id=:id
     getOneIndividual(req: express.Request, res: express.Response) {
         const id = Database.stringToId(req.params.id);
-        IndController.db.getOneRecord(IndController.userTable, { _id: id, TYPE:IndController.individualKey})
+        IndController.db.getOneRecord(IndController.userTable, { _id: id, type:IndController.individualKey})
             .then((results) => res.send({ fn: 'getIndividual', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }

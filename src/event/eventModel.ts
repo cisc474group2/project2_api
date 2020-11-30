@@ -1,10 +1,12 @@
+import { GeoLocModel } from "./geoloc/geolocModel";
+
 export class EventsModel{
     _id='';
     title='';
     bus_id='';
     description?='';
     registered_ind:string[]=[];
-    event_geoloc='';
+    event_geoloc:GeoLocModel = new GeoLocModel;
     event_address='';
     start_time='';
     end_time='';
