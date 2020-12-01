@@ -23,6 +23,16 @@ var EventsController = /** @class */ (function () {
             .then(function (results) { return res.send({ fn: 'getEvent', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    //getEventByCustomFactors
+    //returns a specific event in the database as JSON with id: id
+    EventsController.prototype.getEventByCustomFactors = function (req, res, lookupData) {
+        EventsController.db.getOneRecord(EventsController.eventsTable, { bus_id: lookupData.bus_id,
+            description: lookupData.description,
+            event_address: lookupData.event_address,
+            event_geoloc: lookupData.event_geoloc })
+            .then(function (results) { return res.send({ fn: 'getEvent', status: 'success', data: results._id }).end(); })
+            .catch(function (reason) { return res.status(500).send(reason).end(); });
+    };
     //getRegisteredInd
     //returns the list of registered attendees for the given event in the database as JSON with id: id
     EventsController.prototype.getRegisteredInd = function (req, res) {
@@ -43,8 +53,17 @@ var EventsController = /** @class */ (function () {
             event.event_geoloc = result;
             //Insert Event
             EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
-                .then(function (result) { return res.send({ fn: 'createEvent', status: 'success' }).end(); })
+                .then(function (result) {
+                EventsController.db.getOneRecord(EventsController.eventsTable, { bus_id: event.bus_id,
+                    description: event.description,
+                    event_address: event.event_address,
+                    event_geoloc: event.event_geoloc })
+                    .then(function (results) { return res.send({ fn: 'getEvent', status: 'success', data: { _id: results._id } }).end(); })
+                    .catch(function (reason) { return res.status(500).send(reason).end(); });
+            })
                 .catch(function (reason) { return res.status(500).send(reason).end(); });
+            // .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success', data: {_id: event._id}}).end())
+            // .catch((reason) => res.status(500).send(reason).end());
         }).catch(function (error) {
             console.log("Event not added\n" + error);
             res.status(500).send("Event not added\n" + error).end();
@@ -99,8 +118,6 @@ var EventsController = /** @class */ (function () {
             if (results.registered_ind.includes(data.registered_ind)) {
                 var index = registered_ind.indexOf(data.registered_ind);
                 registered_ind.splice(index, 1);
-                console.log(index);
-                console.log(registered_ind);
             }
             EventsController.db.updateRecord(EventsController.eventsTable, { _id: id }, { $set: { registered_ind: registered_ind, update_date: '<<DATE>>' } })
                 .then(function (results) { return results ? (res.send({ fn: 'deleteAttendee', status: 'success' })) : (res.send({ fn: 'deleteAttendee', status: 'failure', data: 'Not found' })).end(); })

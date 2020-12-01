@@ -23,6 +23,16 @@ export class EventsController {
             .then((results) => res.send({ fn: 'getEvent', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
+    //getEventByCustomFactors
+    //returns a specific event in the database as JSON with id: id
+    getEventByCustomFactors(req: express.Request, res: express.Response, lookupData:EventsModel) {
+        EventsController.db.getOneRecord(EventsController.eventsTable, { bus_id: lookupData.bus_id,
+                                                                         description: lookupData.description,
+                                                                         event_address: lookupData.event_address,
+                                                                         event_geoloc: lookupData.event_geoloc})
+            .then((results) => res.send({ fn: 'getEvent', status: 'success', data: results._id }).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
     //getRegisteredInd
     //returns the list of registered attendees for the given event in the database as JSON with id: id
     getRegisteredInd(req: express.Request, res: express.Response) {
@@ -44,11 +54,18 @@ export class EventsController {
             
             //Insert Event
             EventsController.db.addRecord(EventsController.eventsTable, event.toObject())
-            .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success', data:event._id}).end())
+            .then((result: boolean) => {
+                EventsController.db.getOneRecord(EventsController.eventsTable, 
+                    {   bus_id: event.bus_id,
+                        description: event.description,
+                        event_address: event.event_address,
+                        event_geoloc: event.event_geoloc})
+                .then((results) => res.send({ fn: 'getEvent', status: 'success', data: {_id: results._id} }).end())
+                .catch((reason) => res.status(500).send(reason).end());
+            })
             .catch((reason) => res.status(500).send(reason).end());
-
-            
-
+            // .then((result: boolean) => res.send({ fn: 'createEvent', status: 'success', data: {_id: event._id}}).end())
+            // .catch((reason) => res.status(500).send(reason).end());
         }).catch(error => {
             console.log("Event not added\n" + error);
             res.status(500).send("Event not added\n" + error).end();

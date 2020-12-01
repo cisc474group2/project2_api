@@ -58,8 +58,10 @@ var SecurityController = /** @class */ (function () {
         var user = new userModel_1.UserModel(req.body.email, req.body.password);
         var user_type = req.body.type;
         var type_obj = null;
+        var detail_error = "unknown type passes";
         if (user_type == "I") {
             geolocModel_1.GeoLocModel.googleZipCoding(req.body.type_obj.zip).then(function (result) {
+                detail_error = "google api returned";
                 type_obj = new indModel_1.IndModel();
                 type_obj.fName = req.body.type_obj.first_name;
                 type_obj.lName = req.body.type_obj.last_name;
@@ -71,12 +73,13 @@ var SecurityController = /** @class */ (function () {
                 var sc = new SecurityController();
                 sc.privateRegister(req, res, user);
             }).catch(function (err) {
-                console.log(err);
+                console.log(err, detail_error);
                 res.status(500).send(err).end();
             });
         }
         else if (user_type == "B") {
             geolocModel_1.GeoLocModel.googleGeoCoding(req.body.type_obj.bus_address).then(function (result) {
+                detail_error = "google api returned";
                 type_obj = new busModel_1.BusModel();
                 type_obj.bus_name = req.body.type_obj.bus_name;
                 type_obj.cName = req.body.type_obj.contact_name;
@@ -90,7 +93,7 @@ var SecurityController = /** @class */ (function () {
                 var sc = new SecurityController();
                 sc.privateRegister(req, res, user);
             }).catch(function (err) {
-                console.log(err);
+                console.log(err, detail_error);
                 res.status(500).send(err).end();
             });
         }
