@@ -146,7 +146,7 @@ export class EventsController {
         });
         console.log(ids);      
 
-        EventsController.db.getOneRecord(EventsController.eventsTable, { $or: ids })
+        EventsController.db.getRecords(EventsController.eventsTable, { _id: {$in : ids} })
             .then((results) => res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
     }

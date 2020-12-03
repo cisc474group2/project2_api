@@ -140,7 +140,7 @@ var EventsController = /** @class */ (function () {
             return MongoDB_1.Database.stringToId(id.substr(1, id.length - 2));
         });
         console.log(ids);
-        EventsController.db.getOneRecord(EventsController.eventsTable, { $or: ids })
+        EventsController.db.getRecords(EventsController.eventsTable, { _id: { $in: ids } })
             .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
