@@ -135,6 +135,15 @@ var EventsController = /** @class */ (function () {
             .then(function (results) { return results ? (res.send({ fn: 'deleteEvent', status: 'success' })) : (res.send({ fn: 'deleteEvent', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    EventsController.prototype.getBulkEventLookupByID = function (req, res) {
+        var ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map(function (id) {
+            return MongoDB_1.Database.stringToId(id.substr(1, id.length - 2));
+        });
+        console.log(ids);
+        EventsController.db.getOneRecord(EventsController.eventsTable, { $or: ids })
+            .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
+            .catch(function (reason) { return res.status(500).send(reason).end(); });
+    };
     EventsController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "DEV");
     EventsController.eventsTable = 'EVENT';
     return EventsController;

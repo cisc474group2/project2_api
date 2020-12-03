@@ -1,5 +1,5 @@
 {
-  "name": "exampleapi",
+  "name": "community_wall_api",
   "version": "1.0.0",
   "description": "",
   "main": "out/app.js",
@@ -19,7 +19,7 @@
     "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "tsc": "^1.20150623.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.1.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

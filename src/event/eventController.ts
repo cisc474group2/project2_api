@@ -140,4 +140,15 @@ export class EventsController {
             .catch((reason) => res.status(500).send(reason).end());
     }
 
+    getBulkEventLookupByID(req: express.Request, res: express.Response) {
+        let ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map((id:string) => { 
+            return Database.stringToId(id.substr(1, id.length - 2));
+        });
+        console.log(ids);      
+
+        EventsController.db.getOneRecord(EventsController.eventsTable, { $or: ids })
+            .then((results) => res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
+
 }
