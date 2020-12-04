@@ -147,8 +147,8 @@ export class EventsController {
     //getBulkEventLookupByID
     //gets all the events with a matching ID.  Allows for bulk gathering of event information
     getBulkEventLookupByID(req: express.Request, res: express.Response) {
-        let ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map((id:string) => { 
-            return Database.stringToId(id.substr(1, id.length - 2));
+        let ids = req.body.reg_events.map((id:string) => { 
+            return Database.stringToId(id);
         });
         console.log(ids);      
 
