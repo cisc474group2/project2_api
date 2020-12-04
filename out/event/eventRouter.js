@@ -28,6 +28,7 @@ var EventRouter = /** @class */ (function (_super) {
     EventRouter.prototype.setupRoutes = function () {
         this.addRouter('/geo', new geolocRouter_1.GeoLocRouter());
         this.expressRouter.get('/bulk', EventRouter.eventController.getBulkEventLookupByID);
+        this.expressRouter.get('/search', EventRouter.eventController.getEventsFilterQuery);
         this.expressRouter.get('/', EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id', EventRouter.eventController.getEventByID);
         this.expressRouter.post('/', [securityMiddleware_1.SecurityMiddleware.RequireAuth], EventRouter.eventController.createEvent);

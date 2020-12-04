@@ -135,6 +135,8 @@ var EventsController = /** @class */ (function () {
             .then(function (results) { return results ? (res.send({ fn: 'deleteEvent', status: 'success' })) : (res.send({ fn: 'deleteEvent', status: 'failure', data: 'Not found' })).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    //getBulkEventLookupByID
+    //gets all the events with a matching ID.  Allows for bulk gathering of event information
     EventsController.prototype.getBulkEventLookupByID = function (req, res) {
         var ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map(function (id) {
             return MongoDB_1.Database.stringToId(id.substr(1, id.length - 2));
@@ -144,8 +146,84 @@ var EventsController = /** @class */ (function () {
             .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
     };
+    //getEventsFilterQuery
+    //will use the following filter parameters to build a query
+    //title
+    //geolocation
+    //address
+    //start_date
+    //end_date
+    //business owner
+    EventsController.prototype.getEventsFilterQuery = function (req, res) {
+        var obj_list = new Array();
+        var count = 0;
+        var title_obj = req.body.title;
+        var bus_id_obj = req.body.bus_id;
+        var geoloc_obj = req.body.event_geoloc;
+        var address_obj = req.body.event_address;
+        var start_obj = req.body.start_time;
+        var end_obj = req.body.end_time;
+        //Title Search Settings
+        if (title_obj != undefined && title_obj.length == 1) {
+            title_obj = { title: title_obj };
+            obj_list.push(title_obj);
+        }
+        else if (title_obj != undefined && title_obj.length != 1) {
+            title_obj = { title: { $in: title_obj } };
+            obj_list.push(title_obj);
+        }
+        //Business Search Settings
+        if (bus_id_obj != undefined && bus_id_obj.length == 1) {
+            bus_id_obj = { bus_id: bus_id_obj };
+            obj_list.push(bus_id_obj);
+        }
+        else if (bus_id_obj != undefined && bus_id_obj.length != 1) {
+            bus_id_obj = { bus_id: { $in: bus_id_obj } };
+            obj_list.push(bus_id_obj);
+        }
+        //Geoloc Search Settings
+        var radius = (req.body.search_fields.includes('radius')) ? req.body.radius : EventsController.default_distance_calculation / EventsController.earth_rad_mile;
+        if (geoloc_obj != undefined && geoloc_obj.length == 1) {
+            geoloc_obj = { event_geoloc: geoloc_obj };
+            obj_list.push(geoloc_obj);
+        }
+        else if (geoloc_obj != undefined && geoloc_obj.length != 1) {
+            geoloc_obj = { event_geoloc: { $in: geoloc_obj } };
+            obj_list.push(geoloc_obj);
+        }
+        if (address_obj != undefined && address_obj.length == 1) {
+            address_obj = { event_address: address_obj };
+            obj_list.push(address_obj);
+        }
+        else if (address_obj != undefined && address_obj.length != 1) {
+            address_obj = { event_address: { $in: address_obj } };
+            obj_list.push(address_obj);
+        }
+        if (start_obj != undefined && start_obj.length == 1) {
+            start_obj = { start_date: start_obj };
+            obj_list.push(start_obj);
+        }
+        else if (start_obj != undefined && start_obj.length != 1) {
+            start_obj = { start_date: { $in: start_obj } };
+            obj_list.push(start_obj);
+        }
+        if (end_obj != undefined && end_obj.length == 1) {
+            end_obj = { end_date: end_obj };
+            obj_list.push(end_obj);
+        }
+        else if (end_obj != undefined && end_obj.length != 1) {
+            end_obj = { end_date: { $in: end_obj } };
+            obj_list.push(end_obj);
+        }
+        var q = { $or: obj_list };
+        EventsController.db.getRecords(EventsController.eventsTable, q)
+            .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
+            .catch(function (reason) { return res.status(500).send(reason).end(); });
+    };
     EventsController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "DEV");
     EventsController.eventsTable = 'EVENT';
+    EventsController.earth_rad_mile = 3963.2; //The radius for the earth in miles
+    EventsController.default_distance_calculation = 10; //Default radius for search, 10 miles
     return EventsController;
 }());
 exports.EventsController = EventsController;

@@ -7,6 +7,10 @@ import { GeoLocModel } from './geoloc/geolocModel';
 export class EventsController {
     static db: Database = new Database(Config.url_elevated, "DEV");
     static eventsTable = 'EVENT';
+    static earth_rad_mile = 3963.2;             //The radius for the earth in miles
+    static default_distance_calculation = 10;   //Default radius for search, 10 miles
+
+
     //getEvents
     //returns the list of all events in the database as a JSON
     getEvents(req: express.Request, res: express.Response) {
@@ -139,7 +143,9 @@ export class EventsController {
             .then((results) => results ? (res.send({ fn: 'deleteEvent', status: 'success' })) : (res.send({ fn: 'deleteEvent', status: 'failure', data: 'Not found' })).end())
             .catch((reason) => res.status(500).send(reason).end());
     }
-
+    
+    //getBulkEventLookupByID
+    //gets all the events with a matching ID.  Allows for bulk gathering of event information
     getBulkEventLookupByID(req: express.Request, res: express.Response) {
         let ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map((id:string) => { 
             return Database.stringToId(id.substr(1, id.length - 2));
@@ -151,4 +157,83 @@ export class EventsController {
             .catch((reason) => res.status(500).send(reason).end());
     }
 
+    //getEventsFilterQuery
+    //will use the following filter parameters to build a query
+        //title
+        //geolocation
+        //address
+        //start_date
+        //end_date
+        //business owner
+    getEventsFilterQuery(req: express.Request, res: express.Response) {
+        let obj_list:Array<any> = new Array<any>();
+        let count = 0;
+
+        let title_obj = req.body.title;
+        let bus_id_obj = req.body.bus_id;
+        let geoloc_obj = req.body.event_geoloc;
+        let address_obj = req.body.event_address;
+        let start_obj = req.body.start_time;
+        let end_obj = req.body.end_time;        
+
+        //Title Search Settings
+        if (title_obj != undefined && title_obj.length == 1) {
+            title_obj = { title: title_obj};
+            obj_list.push(title_obj);
+        } else if (title_obj != undefined && title_obj.length != 1) {
+            title_obj = { title: {$in : title_obj}};
+            obj_list.push(title_obj);
+        }
+
+        //Business Search Settings
+        if (bus_id_obj != undefined && bus_id_obj.length == 1) {
+            bus_id_obj = { bus_id: bus_id_obj};
+            obj_list.push(bus_id_obj);
+        } else if (bus_id_obj != undefined && bus_id_obj.length != 1) {
+            bus_id_obj = { bus_id: {$in : bus_id_obj}};
+            obj_list.push(bus_id_obj);
+        }
+
+        //Geoloc Search Settings
+        let radius = (req.body.search_fields.includes('radius')) ?
+            req.body.radius/EventsController.earth_rad_mile :
+            EventsController.default_distance_calculation/EventsController.earth_rad_mile;
+        if (geoloc_obj != undefined && geoloc_obj.length == 1) {
+            geoloc_obj = { event_geoloc: geoloc_obj};
+            obj_list.push(geoloc_obj);
+        } else if (geoloc_obj != undefined && geoloc_obj.length != 1) {
+            geoloc_obj = { event_geoloc: {$in : geoloc_obj}};
+            obj_list.push(geoloc_obj);
+        }
+
+        if (address_obj != undefined && address_obj.length == 1) {
+            address_obj = { event_address: address_obj};
+            obj_list.push(address_obj);
+        } else if (address_obj != undefined && address_obj.length != 1) {
+            address_obj = { event_address: {$in : address_obj}};
+            obj_list.push(address_obj);
+        }
+
+        if (start_obj != undefined && start_obj.length == 1) {
+            start_obj = { start_date: start_obj};
+            obj_list.push(start_obj);
+        } else if (start_obj != undefined && start_obj.length != 1) {
+            start_obj = { start_date: {$in : start_obj}};
+            obj_list.push(start_obj);
+        }
+
+        if (end_obj != undefined && end_obj.length == 1) {
+            end_obj = { end_date: end_obj};
+            obj_list.push(end_obj);
+        } else if (end_obj != undefined && end_obj.length != 1) {
+            end_obj = { end_date: {$in : end_obj}};
+            obj_list.push(end_obj);
+        }
+
+        let q = { $or : obj_list};
+
+        EventsController.db.getRecords(EventsController.eventsTable, q)
+            .then((results) => res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end())
+            .catch((reason) => res.status(500).send(reason).end());
+    }
 }
