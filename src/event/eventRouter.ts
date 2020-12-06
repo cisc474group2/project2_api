@@ -13,6 +13,7 @@ export class EventRouter extends AppRouter{
         this.addRouter('/geo',new GeoLocRouter());
         this.expressRouter.post('/bulk', EventRouter.eventController.getBulkEventLookupByID);
         this.expressRouter.get('/search', EventRouter.eventController.getEventsFilterQuery)
+        this.expressRouter.get('/getTitleInfo/:lat/:lng', EventRouter.eventController.getTitleInfo);
        
         this.expressRouter.get('/',EventRouter.eventController.getEvents);
         this.expressRouter.get('/:id',EventRouter.eventController.getEventByID);

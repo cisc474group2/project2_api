@@ -138,10 +138,10 @@ var EventsController = /** @class */ (function () {
     //getBulkEventLookupByID
     //gets all the events with a matching ID.  Allows for bulk gathering of event information
     EventsController.prototype.getBulkEventLookupByID = function (req, res) {
-        var ids = req.body.reg_events.replace('[', '').replace(']', '').split(',').map(function (id) {
-            return MongoDB_1.Database.stringToId(id.substr(1, id.length - 2));
+        var ids = req.body.reg_events.map(function (id) {
+            return MongoDB_1.Database.stringToId(id);
         });
-        console.log(ids);
+        //console.log(ids);      
         EventsController.db.getRecords(EventsController.eventsTable, { _id: { $in: ids } })
             .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
@@ -182,7 +182,9 @@ var EventsController = /** @class */ (function () {
             obj_list.push(bus_id_obj);
         }
         //Geoloc Search Settings
-        var radius = (req.body.search_fields.includes('radius')) ? req.body.radius : EventsController.default_distance_calculation / EventsController.earth_rad_mile;
+        var radius = (req.body.search_fields.includes('radius')) ?
+            req.body.radius / EventsController.earth_rad_mile :
+            EventsController.default_distance_calculation / EventsController.earth_rad_mile;
         if (geoloc_obj != undefined && geoloc_obj.length == 1) {
             geoloc_obj = { event_geoloc: geoloc_obj };
             obj_list.push(geoloc_obj);
@@ -219,6 +221,19 @@ var EventsController = /** @class */ (function () {
         EventsController.db.getRecords(EventsController.eventsTable, q)
             .then(function (results) { return res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end(); })
             .catch(function (reason) { return res.status(500).send(reason).end(); });
+    };
+    EventsController.prototype.getTitleInfo = function (req, res) {
+        var axios = require('axios').default;
+        var dynURL = config_1.Config.GOOGLE_LATLNG_GEOCODING
+            .replace('<<OUT>>', 'json')
+            .replace('<<LAT>>', req.params.lat)
+            .replace('<<LNG>>', req.params.lng)
+            .replace('<<KEY>>', config_1.Config.GOOGLE_API);
+        axios.get(dynURL).then(function (responce) {
+            res.send({ fn: 'testHaha', status: 'success', data: responce.data }).end();
+        }).catch(function (error) {
+            console.log(error);
+        });
     };
     EventsController.db = new MongoDB_1.Database(config_1.Config.url_elevated, "DEV");
     EventsController.eventsTable = 'EVENT';

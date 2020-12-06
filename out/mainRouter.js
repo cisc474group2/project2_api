@@ -26,6 +26,12 @@ var MainRouter = /** @class */ (function (_super) {
     }
     //adds the child routers to various paths to form the overall API. 
     MainRouter.prototype.setupRoutes = function () {
+        // let app = express();
+        // app.use(app.use(function(req, res, next) {
+        //     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+        //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        //     next();
+        // }));
         this.addRouter('/security', new securityRouter_1.SecurityRouter());
         this.addRouter('/events', new eventRouter_1.EventRouter());
         this.addRouter('/users', new userRouter_1.UserRouter());

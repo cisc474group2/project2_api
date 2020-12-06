@@ -150,7 +150,7 @@ export class EventsController {
         let ids = req.body.reg_events.map((id:string) => { 
             return Database.stringToId(id);
         });
-        console.log(ids);      
+        //console.log(ids);      
 
         EventsController.db.getRecords(EventsController.eventsTable, { _id: {$in : ids} })
             .then((results) => res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end())
@@ -235,5 +235,20 @@ export class EventsController {
         EventsController.db.getRecords(EventsController.eventsTable, q)
             .then((results) => res.send({ fn: 'getBulkEventLookupByID', status: 'success', data: results }).end())
             .catch((reason) => res.status(500).send(reason).end());
+    }
+
+    getTitleInfo(req: express.Request, res: express.Response) {
+        const axios = require('axios').default;
+        let dynURL = Config.GOOGLE_LATLNG_GEOCODING
+            .replace('<<OUT>>', 'json')
+            .replace('<<LAT>>', req.params.lat)
+            .replace('<<LNG>>', req.params.lng)
+            .replace('<<KEY>>', Config.GOOGLE_API);
+
+        axios.get(dynURL).then(function (responce:any) {
+            res.send({fn: 'getTitleInfo', status: 'success', data: responce.data}).end()
+        }).catch(function (error:any) {
+            console.log(error);
+        });
     }
 }
