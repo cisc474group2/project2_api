@@ -18,6 +18,7 @@ var AppRouter_1 = require("./common/AppRouter");
 var securityRouter_1 = require("./security/securityRouter");
 var eventRouter_1 = require("./event/eventRouter");
 var userRouter_1 = require("./user/userRouter");
+var otherRouter_1 = require("./other/otherRouter");
 //root router for the API
 var MainRouter = /** @class */ (function (_super) {
     __extends(MainRouter, _super);
@@ -35,6 +36,7 @@ var MainRouter = /** @class */ (function (_super) {
         this.addRouter('/security', new securityRouter_1.SecurityRouter());
         this.addRouter('/events', new eventRouter_1.EventRouter());
         this.addRouter('/users', new userRouter_1.UserRouter());
+        this.addRouter('/other', new otherRouter_1.OtherRouter());
     };
     return MainRouter;
 }(AppRouter_1.AppRouter));

@@ -224,13 +224,13 @@ var EventsController = /** @class */ (function () {
     };
     EventsController.prototype.getTitleInfo = function (req, res) {
         var axios = require('axios').default;
-        var dynURL = config_1.Config.GOOGLE_LATLNG_GEOCODING
+        var googleURL = config_1.Config.GOOGLE_LATLNG_GEOCODING
             .replace('<<OUT>>', 'json')
             .replace('<<LAT>>', req.params.lat)
             .replace('<<LNG>>', req.params.lng)
             .replace('<<KEY>>', config_1.Config.GOOGLE_API);
-        axios.get(dynURL).then(function (responce) {
-            res.send({ fn: 'testHaha', status: 'success', data: responce.data }).end();
+        axios.get(googleURL).then(function (results) {
+            res.send({ fn: 'getTitleInfo', status: 'success', data: results.data }).end();
         }).catch(function (error) {
             console.log(error);
         });

@@ -3,6 +3,7 @@ import { AppRouter } from './common/AppRouter';
 import { SecurityRouter } from './security/securityRouter';
 import { EventRouter } from './event/eventRouter';
 import { UserRouter } from './user/userRouter';
+import { OtherRouter } from './other/otherRouter';
 
 //root router for the API
 
@@ -22,6 +23,7 @@ export class MainRouter extends AppRouter{
         this.addRouter('/security',new SecurityRouter());        
         this.addRouter('/events', new EventRouter());
         this.addRouter('/users', new UserRouter());
+        this.addRouter('/other', new OtherRouter());
 
     }
     

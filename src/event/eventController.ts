@@ -239,14 +239,14 @@ export class EventsController {
 
     getTitleInfo(req: express.Request, res: express.Response) {
         const axios = require('axios').default;
-        let dynURL = Config.GOOGLE_LATLNG_GEOCODING
+        let googleURL = Config.GOOGLE_LATLNG_GEOCODING
             .replace('<<OUT>>', 'json')
             .replace('<<LAT>>', req.params.lat)
             .replace('<<LNG>>', req.params.lng)
             .replace('<<KEY>>', Config.GOOGLE_API);
-
-        axios.get(dynURL).then(function (responce:any) {
-            res.send({fn: 'getTitleInfo', status: 'success', data: responce.data}).end()
+        
+        axios.get(googleURL).then(function (results:any) {
+            res.send({fn: 'getTitleInfo', status: 'success', data: results.data}).end()
         }).catch(function (error:any) {
             console.log(error);
         });
